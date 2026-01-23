@@ -1,0 +1,3608 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     93372,       3600]
+NotebookOptionsPosition[     82109,       3405]
+NotebookOutlinePosition[     84198,       3457]
+CellTagsIndexPosition[     83902,       3447]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Spherical Bessel Functions in Mathematica", "Subtitle",
+ TextAlignment->Center,
+ TextJustification->0,ExpressionUUID->"32724a12-908c-4f69-b769-86facf605b73"],
+
+Cell[TextData[{
+ "Here we look at spherical Bessel functions, seeing how to define them in \
+terms of more general ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " functions (e.g., BesselJ), how to get a value printed out with more than \
+the default number of digits (using NumberForm or ScientificForm), and how to \
+make plots to analyze the behavior of the functions."
+}], "Text",ExpressionUUID->"8f419922-84ac-4875-a072-2cc92f51f7e8"],
+
+Cell[CellGroupData[{
+
+Cell["Definitions", "Subsubsection",ExpressionUUID->"345e6c0c-aefd-4f41-a109-60f067431847"],
+
+Cell[TextData[{
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " doesn't have built-in spherical Bessel function routines but you can \
+define them easily in terms of the more general Bessel functions using \
+expressions from Abramowitz and Stegun (or equivalent).  If you don't know \
+where to start, open the Help Browser, select \"Master Index\" and type in \
+bessel.\nUnder the \"Bessel functions\" entry you'll find all of the info you \
+need, including an entry for spherical Bessel functions."
+}], "Text",ExpressionUUID->"d369c76b-0ede-4d83-9cb5-9c8bbde1b4d4"],
+
+Cell["\<\
+If we know the name of the command, prepending a \"?\" tells us how to use it.\
+\>", "Text",ExpressionUUID->"6608fd90-5ffc-4d55-8588-4fdba8f07109"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "BesselJ"}]], "Input",ExpressionUUID->"8cda1c55-5962-42ef-a30d-c1b7dd2808cf"],
+
+Cell[BoxData[
+ RowBox[{"\<\"BesselJ[n, z] gives the Bessel function of the first kind J(n, \
+z).\"\>", " ", 
+  ButtonBox[
+   StyleBox["More\[Ellipsis]", "SR"],
+   Active->True,
+   BaseStyle->"RefGuideLink",
+   ButtonData:>"BesselJ"]}]], "Print",
+ CellTags->
+  "Info3283057598-3083749",ExpressionUUID->"e7900900-54d5-4c1d-9aa9-\
+e44eff75efbc"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "BesselY"}]], "Input",ExpressionUUID->"23d9cd82-c9e0-442e-81b5-be5cf63311b3"],
+
+Cell[BoxData[
+ RowBox[{"\<\"BesselY[n, z] gives the Bessel function of the second kind Y(n, \
+z).\"\>", " ", 
+  ButtonBox[
+   StyleBox["More\[Ellipsis]", "SR"],
+   Active->True,
+   BaseStyle->"RefGuideLink",
+   ButtonData:>"BesselY"]}]], "Print",
+ CellTags->
+  "Info3283057600-1041746",ExpressionUUID->"8badf443-453e-4872-9213-\
+e68c602e5257"]
+}, Open  ]],
+
+Cell["\<\
+Make the definitions.  Remember to use \"_\" after the variables on the left \
+side but not the right side.  Also note the use of \":=\" in the definition.\
+\>", "Text",ExpressionUUID->"0dc3cc5c-8664-4851-bc78-8e173c1b4581"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"jl", "[", 
+   RowBox[{"x_", ",", "l_"}], "]"}], ":=", " ", 
+  RowBox[{
+   RowBox[{"Sqrt", "[", 
+    RowBox[{"Pi", "/", 
+     RowBox[{"(", 
+      RowBox[{"2", " ", "x"}], ")"}]}], "]"}], " ", 
+   RowBox[{"BesselJ", "[", 
+    RowBox[{
+     RowBox[{"l", "+", 
+      RowBox[{"1", "/", "2"}]}], ",", "x"}], "]"}]}]}]], "Input",ExpressionUUI\
+D->"f03eeff6-613d-4a35-8bb6-4cd77283998c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"nl", "[", 
+   RowBox[{"x_", ",", "l_"}], "]"}], ":=", 
+  RowBox[{
+   RowBox[{"Sqrt", "[", 
+    RowBox[{"Pi", "/", 
+     RowBox[{"(", 
+      RowBox[{"2", " ", "x"}], ")"}]}], "]"}], " ", 
+   RowBox[{"BesselY", "[", 
+    RowBox[{
+     RowBox[{"l", "+", 
+      RowBox[{"1", "/", "2"}]}], ",", "x"}], "]"}]}]}]], "Input",ExpressionUUI\
+D->"17490361-37f0-4fc0-b787-74d31b11b724"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Printing answers to full precision", "Subsubsection",ExpressionUUID->"c86433da-8586-4e38-9a58-9a8def7aa2d5"],
+
+Cell["\<\
+If we want to know the value at x=36.2 and l=10, we don't get many digits and \
+using N[ ] doesn't help:\
+\>", "Text",ExpressionUUID->"dbce2e35-8eea-4cf5-9eda-aceab2d21c51"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"jl", "[", 
+  RowBox[{"36.2", ",", "10"}], "]"}]], "Input",ExpressionUUID->"4f0c4341-2b28-\
+43f8-a955-63ce01ec44ac"],
+
+Cell[BoxData[
+ RowBox[{"-", "0.0008604249299853348`"}]], "Output",ExpressionUUID->"a96e0bbb-7e9a-4c1d-95ed-946bb8b77c3c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"N", "[", 
+  RowBox[{
+   RowBox[{"jl", "[", 
+    RowBox[{"36.2", ",", "10"}], "]"}], ",", "16"}], "]"}]], "Input",Expressio\
+nUUID->"19a1fb93-0a89-4dd2-8574-30a02638676a"],
+
+Cell[BoxData[
+ RowBox[{"-", "0.0008604249299853348`"}]], "Output",ExpressionUUID->"09fa67d3-bdf5-4cdf-aa31-b2b1621a7fb8"]
+}, Open  ]],
+
+Cell[TextData[{
+ "We can confirm that ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " calculates the result with more precision by using Precision[ ]:"
+}], "Text",ExpressionUUID->"f656d39a-02dc-40a8-9929-a6134f27dd76"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Precision", "[", 
+  RowBox[{"jl", "[", 
+   RowBox[{"36.2", ",", "10"}], "]"}], "]"}]], "Input",ExpressionUUID->\
+"f2079adc-7491-43b6-bd79-da73f8c613fd"],
+
+Cell[BoxData["MachinePrecision"], "Output",ExpressionUUID->"65f5faff-8c04-41c5-b234-8f1712b893fb"]
+}, Open  ]],
+
+Cell["\<\
+One solution is to use NumberForm or ScientificForm to print out more digits:\
+\
+\>", "Text",ExpressionUUID->"8e5abff6-8bc7-4f6b-aea9-ea236cc73558"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "NumberForm"}]], "Input",ExpressionUUID->"7c9da8fb-0681-422f-bc37-7989190aca0b"],
+
+Cell[BoxData[
+ RowBox[{"\<\"NumberForm[expr, n] prints with approximate real numbers in \
+expr given to n-digit precision.\"\>", " ", 
+  ButtonBox[
+   StyleBox["More\[Ellipsis]", "SR"],
+   Active->True,
+   BaseStyle->"RefGuideLink",
+   ButtonData:>"NumberForm"]}]], "Print",
+ CellTags->
+  "Info3283057600-9948359",ExpressionUUID->"8653e7b4-a606-4f98-8318-\
+93239ab47e90"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "ScientificForm"}]], "Input",ExpressionUUID->"8df0858a-dace-46bd-ba44-ccf32d778e7a"],
+
+Cell[BoxData[
+ RowBox[{"\<\"ScientificForm[expr] prints with all real numbers in expr given \
+in scientific notation. ScientificForm[expr, n] prints with numbers given to \
+n-digit precision.\"\>", " ", 
+  ButtonBox[
+   StyleBox["More\[Ellipsis]", "SR"],
+   Active->True,
+   BaseStyle->"RefGuideLink",
+   ButtonData:>"ScientificForm"]}]], "Print",
+ CellTags->
+  "Info3283057600-2400139",ExpressionUUID->"ac4210d7-0166-4bed-87a2-\
+b229776d5eb1"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"NumberForm", "[", 
+  RowBox[{
+   RowBox[{"jl", "[", 
+    RowBox[{"36.2", ",", "10"}], "]"}], ",", "16"}], "]"}]], "Input",Expressio\
+nUUID->"364a1f18-d266-4ecf-afb8-ce794814fe9b"],
+
+Cell[BoxData[
+ TagBox[
+  InterpretationBox["\<\"-0.000860424929985335\"\>",
+   -0.0008604249299853348,
+   AutoDelete->True],
+  NumberForm[#, 16]& ]], "Output",ExpressionUUID->"505ab499-8b66-4495-b29a-\
+66c8a468c2ca"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ScientificForm", "[", 
+  RowBox[{
+   RowBox[{"jl", "[", 
+    RowBox[{"36.2", ",", "10"}], "]"}], ",", "16"}], "]"}]], "Input",Expressio\
+nUUID->"acd2fd06-15b8-4671-a21f-c4954e93858d"],
+
+Cell[BoxData[
+ TagBox[
+  InterpretationBox[
+   RowBox[{"\<\"-8.60424929985335\"\>", "\[Times]", 
+    SuperscriptBox["10", "\<\"-4\"\>"]}],
+   -0.0008604249299853348,
+   AutoDelete->True],
+  ScientificForm[#, 16]& ]], "Output",ExpressionUUID->"baa982c1-0d6e-4862-\
+a3fc-31711029d58b"]
+}, Open  ]],
+
+Cell["\<\
+Note that trying to print out 30 digits doesn't give more digits than the \
+precision. \
+\>", "Text",ExpressionUUID->"74b4d328-5028-4f83-bd8a-f0bf01f86463"],
+
+Cell[BoxData[
+ RowBox[{"NumberForm", "[", 
+  RowBox[{
+   RowBox[{"jl", "[", 
+    RowBox[{"36.2", ",", "10"}], "]"}], ",", "30"}], "]"}]], "Input",Expressio\
+nUUID->"0f5be0f1-9005-4008-b06c-36a07615b3b4"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ TagBox[
+  InterpretationBox["\"\<-0.000860424929985335\>\"",
+   -0.0008604249299853348,
+   AutoDelete->True],
+  NumberForm[#, 30]& ]], "Input",
+ CellChangeTimes->{3.978180513406955*^9},
+ CellLabel->"In[1]:=",ExpressionUUID->"0c28c668-6bcf-4ccc-9afe-394040cb409f"],
+
+Cell[BoxData[
+ RowBox[{"-", "0.0008604249299853348`"}]], "Output",
+ CellChangeTimes->{3.978180513576562*^9},
+ CellLabel->"Out[1]=",ExpressionUUID->"48d62db3-92a6-4842-a0ba-3cb2aeb57608"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Generating a Log-Log plot", "Subsubsection",ExpressionUUID->"34b4cc00-051f-488d-8247-c5132a4cfb64"],
+
+Cell["\<\
+Suppose we want to examine the power-law dependence of the spherical Bessel \
+functions with l=10.  Start by defining \"lval\":\
+\>", "Text",ExpressionUUID->"d544b590-5e8f-46bb-85f0-763df5a0aacb"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"lval", " ", "=", " ", "10"}], ";"}]], "Input",ExpressionUUID->\
+"4bb85fd9-ea1d-4717-96e7-eab5cac56c51"],
+
+Cell["\<\
+We can check the first terms in the power series expansions about x=0 (even \
+for negative powers of x!):\
+\>", "Text",ExpressionUUID->"cf06dcbf-2003-439e-bde8-4fc87c619d59"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Series", "[", 
+  RowBox[{
+   RowBox[{"jl", "[", 
+    RowBox[{"x", ",", "lval"}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "0", ",", "13"}], "}"}]}], "]"}]], "Input",ExpressionUUI\
+D->"7c78449f-6324-4617-93d7-e1b0b16ee7e3"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   FractionBox[
+    SuperscriptBox["x", "10"], "13749310575"], "-", 
+   FractionBox[
+    SuperscriptBox["x", "12"], "632468286450"], "+", 
+   InterpretationBox[
+    SuperscriptBox[
+     RowBox[{"O", "[", "x", "]"}], "14"],
+    SeriesData[x, 0, {}, 20, 28, 2],
+    Editable->False]}],
+  SeriesData[x, 0, {
+    Rational[1, 13749310575], 0, 0, 0, 
+    Rational[-1, 632468286450]}, 20, 28, 2],
+  Editable->False]], "Output",ExpressionUUID->"e7bebdb2-0575-49f4-90dc-\
+ced993892170"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Series", "[", 
+  RowBox[{
+   RowBox[{"nl", "[", 
+    RowBox[{"x", ",", "lval"}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "0", ",", 
+     RowBox[{"-", "9"}]}], "}"}]}], "]"}]], "Input",ExpressionUUID->"9d7786e6-\
+2f5a-4479-94b9-fd655e0fa613"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   RowBox[{"-", 
+    FractionBox["654729075", 
+     SuperscriptBox["x", "11"]]}], "-", 
+   FractionBox["34459425", 
+    RowBox[{"2", " ", 
+     SuperscriptBox["x", "9"]}]], "+", 
+   InterpretationBox[
+    FractionBox["1", 
+     SuperscriptBox[
+      RowBox[{"O", "[", "x", "]"}], "8"]],
+    SeriesData[x, 0, {}, -22, -16, 2],
+    Editable->False]}],
+  SeriesData[x, 0, {-654729075, 0, 0, 0, 
+    Rational[-34459425, 2]}, -22, -16, 2],
+  Editable->False]], "Output",ExpressionUUID->"571514b6-80f0-4085-bab7-\
+5a8cf7c03e6b"]
+}, Open  ]],
+
+Cell[TextData[{
+ "To make log-log plots, we need to load the \"Graphics\" package as follows. \
+ Be careful not to use the command \"LogLogPlot\" before loading the package, \
+or ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " will think you are defining a new name.  If you make this mistake, use \
+Remove[LogLogPlot] to recover."
+}], "Text",ExpressionUUID->"2166fd0a-604c-438d-8205-7a8f5b08b67b"],
+
+Cell[BoxData[
+ RowBox[{"<<", "Graphics`Graphics`"}]], "Input",ExpressionUUID->"cab936b7-e3fe-4755-91ea-ccd45b1e774f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LogLogPlot"}]], "Input",ExpressionUUID->"9b61e7ca-3080-40f0-bc10-46bf2b253232"],
+
+Cell[BoxData[
+ RowBox[{"\<\"LogLogPlot[f, {x, xmin, xmax}] generates a plot of Log[f] as a \
+function of Log[x].\"\>", " ", 
+  ButtonBox[
+   StyleBox["More\[Ellipsis]", "SR"],
+   Active->True,
+   BaseStyle->"AddOnsLink",
+   ButtonData:>"Graphics`Graphics`"]}]], "Print",
+ CellTags->
+  "Info3283057967-6651861",ExpressionUUID->"c705bffe-e6f3-4793-99ed-\
+2e173679219e"]
+}, Open  ]],
+
+Cell["Check the relative scaling of nl and jl for 1<x<5:", "Text",ExpressionUUID->"f783280a-2a66-4636-a80a-02f66322c4d4"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"LogLogPlot", "[", 
+  RowBox[{
+   RowBox[{"Abs", "[", 
+    RowBox[{
+     RowBox[{"nl", "[", 
+      RowBox[{"x", ",", "lval"}], "]"}], "/", 
+     RowBox[{"jl", "[", 
+      RowBox[{"x", ",", "lval"}], "]"}]}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "1", ",", "5"}], "}"}], ",", 
+   RowBox[{"PlotRange", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", 
+      RowBox[{"10", "^", 
+       RowBox[{"(", "20", ")"}]}]}], "}"}]}]}], "]"}]], "Input",ExpressionUUID\
+->"ff064104-05f9-4257-b7a8-3c404fc9508d"],
+
+Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0238095 1.36255 0 0.0309017 [
+[.02381 -0.0125 -5 -9.8125 ]
+[.02381 -0.0125 5 0 ]
+[.26374 -0.0125 -11 -9.8125 ]
+[.26374 -0.0125 11 0 ]
+[.43398 -0.0125 -5 -9.8125 ]
+[.43398 -0.0125 5 0 ]
+[.67391 -0.0125 -5 -9.8125 ]
+[.67391 -0.0125 5 0 ]
+[.97619 -0.0125 -5 -9.8125 ]
+[.97619 -0.0125 5 0 ]
+[-0.0125 .12361 -34 -4.90625 ]
+[-0.0125 .12361 0 4.90625 ]
+[-0.0125 .24721 -43.1875 -6.15625 ]
+[-0.0125 .24721 0 6.15625 ]
+[-0.0125 .37082 -47.4375 -6.15625 ]
+[-0.0125 .37082 0 6.15625 ]
+[-0.0125 .49443 -47.4375 -6.15625 ]
+[-0.0125 .49443 0 6.15625 ]
+[-0.0125 .61803 -47.4375 -6.15625 ]
+[-0.0125 .61803 0 6.15625 ]
+[ -0.0005 -0.0005 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.02381 0 m
+.02381 .00625 L
+s
+gsave
+.02381 -0.0125 -66 -13.8125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 17.8125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+69.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.26374 0 m
+.26374 .00625 L
+s
+gsave
+.26374 -0.0125 -72 -13.8125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 17.8125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1.5) show
+81.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.43398 0 m
+.43398 .00625 L
+s
+gsave
+.43398 -0.0125 -66 -13.8125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 17.8125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(2) show
+69.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.67391 0 m
+.67391 .00625 L
+s
+gsave
+.67391 -0.0125 -66 -13.8125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 17.8125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(3) show
+69.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.97619 0 m
+.97619 .00625 L
+s
+gsave
+.97619 -0.0125 -66 -13.8125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 17.8125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(5) show
+69.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.001 w
+.08021 0 m
+.08021 .00375 L
+s
+.1317 0 m
+.1317 .00375 L
+s
+.17906 0 m
+.17906 .00375 L
+s
+.22292 0 m
+.22292 .00375 L
+s
+.30193 0 m
+.30193 .00375 L
+s
+.33781 0 m
+.33781 .00375 L
+s
+.37163 0 m
+.37163 .00375 L
+s
+.40363 0 m
+.40363 .00375 L
+s
+.84415 0 m
+.84415 .00375 L
+s
+.25 Mabswid
+0 0 m
+1 0 L
+s
+0 .12361 m
+.00625 .12361 L
+s
+gsave
+-0.0125 .12361 -95 -8.90625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 17.8125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10000) show
+93.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .24721 m
+.00625 .24721 L
+s
+gsave
+-0.0125 .24721 -104.188 -10.1562 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.3125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.750 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1.) show
+75.000 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+76.812 13.750 moveto
+%%IncludeResource: font Mathematica1Mono
+%%IncludeFont: Mathematica1Mono
+/Mathematica1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(\\264) show
+84.625 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10) show
+96.625 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+96.625 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(8) show
+100.875 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .37082 m
+.00625 .37082 L
+s
+gsave
+-0.0125 .37082 -108.438 -10.1562 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.3125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.750 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1.) show
+75.000 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+76.812 13.750 moveto
+%%IncludeResource: font Mathematica1Mono
+%%IncludeFont: Mathematica1Mono
+/Mathematica1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(\\264) show
+84.625 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10) show
+96.625 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+96.625 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(12) show
+105.125 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .49443 m
+.00625 .49443 L
+s
+gsave
+-0.0125 .49443 -108.438 -10.1562 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.3125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.750 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1.) show
+75.000 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+76.812 13.750 moveto
+%%IncludeResource: font Mathematica1Mono
+%%IncludeFont: Mathematica1Mono
+/Mathematica1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(\\264) show
+84.625 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10) show
+96.625 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+96.625 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(16) show
+105.125 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .61803 m
+.00625 .61803 L
+s
+gsave
+-0.0125 .61803 -108.438 -10.1562 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.3125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.750 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1.) show
+75.000 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+76.812 13.750 moveto
+%%IncludeResource: font Mathematica1Mono
+%%IncludeFont: Mathematica1Mono
+/Mathematica1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(\\264) show
+84.625 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10) show
+96.625 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+96.625 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(20) show
+105.125 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.001 w
+0 .09413 m
+.00375 .09413 L
+s
+0 .10343 m
+.00375 .10343 L
+s
+0 .10887 m
+.00375 .10887 L
+s
+0 .11273 m
+.00375 .11273 L
+s
+0 .11572 m
+.00375 .11572 L
+s
+0 .11817 m
+.00375 .11817 L
+s
+0 .12023 m
+.00375 .12023 L
+s
+0 .12203 m
+.00375 .12203 L
+s
+0 .21774 m
+.00375 .21774 L
+s
+0 .22703 m
+.00375 .22703 L
+s
+0 .23247 m
+.00375 .23247 L
+s
+0 .23633 m
+.00375 .23633 L
+s
+0 .23933 m
+.00375 .23933 L
+s
+0 .24177 m
+.00375 .24177 L
+s
+0 .24384 m
+.00375 .24384 L
+s
+0 .24563 m
+.00375 .24563 L
+s
+0 .34134 m
+.00375 .34134 L
+s
+0 .35064 m
+.00375 .35064 L
+s
+0 .35608 m
+.00375 .35608 L
+s
+0 .35994 m
+.00375 .35994 L
+s
+0 .36293 m
+.00375 .36293 L
+s
+0 .36538 m
+.00375 .36538 L
+s
+0 .36745 m
+.00375 .36745 L
+s
+0 .36924 m
+.00375 .36924 L
+s
+0 .46495 m
+.00375 .46495 L
+s
+0 .47425 m
+.00375 .47425 L
+s
+0 .47969 m
+.00375 .47969 L
+s
+0 .48355 m
+.00375 .48355 L
+s
+0 .48654 m
+.00375 .48654 L
+s
+0 .48899 m
+.00375 .48899 L
+s
+0 .49105 m
+.00375 .49105 L
+s
+0 .49285 m
+.00375 .49285 L
+s
+0 .58856 m
+.00375 .58856 L
+s
+0 .59785 m
+.00375 .59785 L
+s
+0 .60329 m
+.00375 .60329 L
+s
+0 .60715 m
+.00375 .60715 L
+s
+0 .61015 m
+.00375 .61015 L
+s
+0 .61259 m
+.00375 .61259 L
+s
+0 .61466 m
+.00375 .61466 L
+s
+0 .61645 m
+.00375 .61645 L
+s
+.25 Mabswid
+0 0 m
+0 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+.5 Mabswid
+.02381 .58637 m
+.11279 .54421 L
+.19666 .50456 L
+.26588 .4719 L
+.32559 .44379 L
+.38316 .41676 L
+.43374 .39308 L
+.48314 .37002 L
+.52713 .34957 L
+.56657 .3313 L
+.60582 .31318 L
+.64131 .29688 L
+.67354 .28214 L
+.70603 .26736 L
+.7357 .25393 L
+.76569 .24043 L
+.79321 .22812 L
+.81852 .21687 L
+.84432 .20548 L
+.86814 .19504 L
+.89245 .18448 L
+.91496 .17477 L
+.93584 .16584 L
+.95726 .15676 L
+.97619 .14882 L
+s
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+ ImageSize->{288, 177.938},
+ ImageMargins->{{43, 0}, {0, 0}},
+ ImageRegion->{{0, 1}, {0, 
+  1}},ImageCache->GraphicsData["CompressedBitmap", "\<\
+eJztmnuIFVUcx2fva5+ur91W2bZu5qvNtmUVsVRuuttqkpJYKiLVZVnaLRZt
+Xe2NiIhI0TsppERExN5lD6QXIlqI9ECkorL3O0pERESynXMu37kz/r5z7jg7
+2h/3/jHzu7/f5/x+v/O7c+acOXPnZvu6Onuyfd0d2fSs3uzyru6OFen2Zb39
+qniJZZV0WZZ1OG3Z8ul+MXdQn277kPtynuVW+5Syc7sKUsKWYraUtKWELY2B
+dQZ0iyCltLN2dYqfRkf7v00TdE6AcsF6qTom83Xa0P+5VuAXC7p4sIQGC7rR
+gk7yF1H4MahRREEr7aP69S5DqFZIZ/3bVgq6ywVdq6C7UdCVhg8/VtDFwqfU
+Zp+UZRqkQSib+v3URTwTujOKqvwZRmgmF9WyGtUQ0AppRHl0gwRdVYE6aVxW
+CLoyWh4zlypQ1yborhR00oBN5dWwWLKwJVPHcUV70V60K3sM5vHn3avc6gxt
+jX1ylnnKadJXSol+6oSc9Aokka9DoLDqwrOQpvbYwGUmdPl/mpbPFVNMMIoE
+I7/+ffKptU/OyE3AFZVMHjNR2RvsgxozZQayHmSFgRyB7lcZyAvgc7CBrAE5
+1EAOAzncQFbbB1X+WgNZiR6NNJDliH6hgSwFeZGBTIJMG8gY8hxlJK3cc5EM
+nYInnyvoJDw1cugEoAkcOg6oiUPHADVz6CigFg4dATQpD1KKfyBN5u3/RHWm
+cOh3eJrqDfIr2k/3mn6GdI02qXHp2QvStwt5Wybh5uMYXarlj5Bm6gbSQ7oT
+yPswZOFGUdDd1on7PaQ2Hrda0EmPY3zyER4NVdBvIbXz8N4nTtbZ4OG/gTSb
+h9c3S/lHHZgqfAVpDk9jRNhQHt0XCHp9sKDkmnLucdIT/SFY52m+HApnWnJm
+ZbJkkfYPDqIf8zU1EQopkc9gXaDxlsJDfYK2NwVuewC9XFRImvthXaLxjAB9
+BGgph/YBuplDe5DdrRzaDU8dHHofnjo59C48dXFoFzzdzqG34amHQ28CWsah
+nYDu5NBrgFZw6BVAKzn0EqC7OPQCoHs4tAPQfRzaDugBDm0DtJpDWwGt4dAW
+QGs5tBnQujxIKZ6DtJ633wRog7f9M7ak6Ad5+43AH/a2fwrSo9qkbnrSmx8y
+MSTdvArsrJWfgPS4biA9Z3iXFe4JULrHkDuzE/cxSE/yuNIGb5jpdiiCPgJp
+Iw/vnatYZ4OHf8iWlPFpHl7PgvKPGroKHt0GpLaJJ3S2876dsPqmDOqikPJf
+jxyeDZYDudikPQFJJ+WyDrls1t6csSMtEiS30jaFtEhbi1BbdKgmAUoKOqk8
+a+BsK3dGljRSHVbD3zbuz9lVk0bH/ajXdu0iI0D3wsXzHLob0IscWgXoZQ71
+AXqVQ72AXufQckBvcKgHJXiLQ3fA0y4OdQN6h0O3AXqPQ52APuBQB6DdHMoC
+2sOhWwDt5dBS1OlDDi2Bp/0cWgzoAIcWAvqYQwuQ06ccmg9PB/MgpbgB0iHe
+fi6gzzk0B5l86Q1yHaSvvaZZkA5r04CtHzzptcHbd7rpOVpJOP+C+IHHjW4l
+MQPSTzx8dCuJDKRfePhIVxIq+HRIv/E0wuwbSIuWqxH0j2BB/fYNnPmczmhT
+YP1Ltwy+OAgwBU9GtL81FXJKnwR/Rwz+4qwALXBx1OCC7io0w3qMu4gjC6kj
+TXBxXLvICNAEQCc41AjoJIfGAzrFobGA/uXQaEDqewknR7nJOCfTbjLJyQYU
+VX0v5WS926fPS52RbtLnpU6dm6zmZK2bHMLJ4W5yGCeHuPtew8lqt886Tla5
+SZ/XPxVusp6TZW6ygZOeF+0XczLhJi/JIx1t+L8wBG41sPsZ+Z7P0QLEFDK6
+tYcpcnTLDlPkqFYc6jiVxw29ReH5h8jEYKEC7ESQGVudc+8l/ZcVen9BLjEt
+Xe61aLMc3NTsCr9mvl1x5mrPbShXYCVH+Md5q+Q/cXNdZg==\
+\>", "ImageResolution" -> 72.],ImageRangeCache->{{{0., 359.}, {221.375, 0.}} -> \
+{-0.173676, -2.55323, 0.00309931, \
+0.136658}},ExpressionUUID->"77a659e8-ae9b-478a-b936-bb5edcf0734b"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"\[SkeletonIndicator]", "Graphics", "\[SkeletonIndicator]"}],
+  False,
+  Editable->False]], "Output",ExpressionUUID->"b0a31ae3-9ec0-43d4-868b-\
+8c694dea9776"]
+}, Open  ]],
+
+Cell["\<\
+We see that nl is much larger than jl in this region.
+
+Now suppose we want to look at jl/nl for fixed x (say x=0.1) as a function of \
+integer l.\
+\>", "Text",ExpressionUUID->"1fee35b2-a344-46e6-a6b7-44df17b38781"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"xval", " ", "=", " ", "0.1"}], ";"}]], "Input",ExpressionUUID->\
+"a87bcbfc-0bcf-4aec-865a-b012d7624e8b"],
+
+Cell["First make a table of the values of l:", "Text",ExpressionUUID->"22140883-92c2-40a4-8ad7-d4b2ecada2bd"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"lvalues", " ", "=", " ", 
+  RowBox[{"Table", "[", 
+   RowBox[{"l", ",", 
+    RowBox[{"{", 
+     RowBox[{"l", ",", "0", ",", "10"}], "}"}]}], "]"}]}]], "Input",Expression\
+UUID->"01431c68-d9e9-4757-ba51-c335ecce2557"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0", ",", "1", ",", "2", ",", "3", ",", "4", ",", "5", ",", "6", ",", "7", ",",
+    "8", ",", "9", ",", "10"}], "}"}]], "Output",ExpressionUUID->"25e3d1bd-\
+c7f4-4979-a8f0-e69e325b1bf1"]
+}, Open  ]],
+
+Cell["\<\
+If we evaluate a function with the table, we get a table of function values:\
+\>", "Text",ExpressionUUID->"c9d793e5-31a7-4d7b-80ef-f8a84ff3c81b"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"jl", "[", 
+  RowBox[{"xval", ",", "lvalues"}], "]"}]], "Input",ExpressionUUID->"a17e7a32-\
+561b-4f0c-980c-81dc562cad9b"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.9983341664682813`", ",", "0.03330001190255758`", ",", 
+   "0.0006661906084455688`", ",", "9.51851972086557`*^-6", ",", 
+   "1.0577201502098731`*^-7", ",", "9.61631023291645`*^-10", ",", 
+   "7.397541093587708`*^-12", ",", "4.931887475731975`*^-14", ",", 
+   "2.9012001025301907`*^-16", ",", "1.5269856934948206`*^-18", ",", 
+   "7.271510996713676`*^-21"}], "}"}]], "Output",ExpressionUUID->"b222facd-\
+b1a5-4f15-9b83-0063c6251d1a"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"nl", "[", 
+  RowBox[{"xval", ",", "lvalues"}], "]"}]], "Input",ExpressionUUID->"65619bfb-\
+5dd1-498e-9def-42bfd142511f"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"-", "9.950041652780259`"}], ",", 
+   RowBox[{"-", "100.49875069427087`"}], ",", 
+   RowBox[{"-", "3005.012479175345`"}], ",", 
+   RowBox[{"-", "150150.125208073`"}], ",", 
+   RowBox[{"-", "1.0507503752085935`*^7"}], ",", 
+   RowBox[{"-", "9.45525187562526`*^8"}], ",", 
+   RowBox[{"-", "1.0399726312812576`*^11"}], ",", 
+   RowBox[{"-", "1.3518698681468787`*^13"}], ",", 
+   RowBox[{"-", "2.0277008049571895`*^15"}], ",", 
+   RowBox[{"-", "3.446956181440407`*^17"}], ",", 
+   RowBox[{"-", "6.549013974656278`*^19"}]}], "}"}]], "Output",ExpressionUUID->\
+"1389ed0b-c311-4d2e-8cba-2b60a8d7084f"]
+}, Open  ]],
+
+Cell["\<\
+If we have numbers rather than functions to plot, we want to use a \"ListPlot\
+\".  Check the definition:\
+\>", "Text",ExpressionUUID->"392ef620-39c9-4829-b9fd-6b98379f945e"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "LogListPlot"}]], "Input",ExpressionUUID->"37c9425b-a148-4878-8f71-2a2fa837bf49"],
+
+Cell[BoxData[
+ RowBox[{"\<\"LogListPlot[{y1, y2, ...}] or LogListPlot[{{x1, y1}, {x2, y2}, \
+...}] generates a plot of Log[yi] against the xi.\"\>", " ", 
+  ButtonBox[
+   StyleBox["More\[Ellipsis]", "SR"],
+   Active->True,
+   BaseStyle->"AddOnsLink",
+   ButtonData:>"Graphics`Graphics`"]}]], "Print",
+ CellTags->
+  "Info3283058100-5902494",ExpressionUUID->"f01e43ba-6908-42d9-9832-\
+1466b8c16e30"]
+}, Open  ]],
+
+Cell["This construction forms pairs from our lvalues and jl lists:", "Text",ExpressionUUID->"9bf13f9d-9d29-4879-ba33-ad505c1f9f58"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"jlist", " ", "=", " ", 
+  RowBox[{"Abs", "[", 
+   RowBox[{"Transpose", "[", 
+    RowBox[{"{", 
+     RowBox[{"lvalues", ",", 
+      RowBox[{"jl", "[", 
+       RowBox[{"xval", ",", "lvalues"}], "]"}]}], "}"}], "]"}], 
+   "]"}]}]], "Input",ExpressionUUID->"2bb715c3-7d0a-402b-b489-43404d490ebe"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"0", ",", "4.9916708323414065`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0.1665000595127879`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "0.003330953042227844`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "0.00004759259860432785`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"4", ",", "5.288600751049365`*^-7"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"5", ",", "4.808155116458225`*^-9"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"6", ",", "3.698770546793854`*^-11"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"7", ",", "2.4659437378659876`*^-13"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"8", ",", "1.4506000512650954`*^-15"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"9", ",", "7.634928467474103`*^-18"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"10", ",", "3.635755498356838`*^-20"}], "}"}]}], "}"}]], "Output",\
+ExpressionUUID->"b135aa58-5683-4b3f-9362-33e9d65a06c6"]
+}, Open  ]],
+
+Cell["\<\
+Multiply nl by machine precision for the comparison (and take absolute \
+values):\
+\>", "Text",ExpressionUUID->"e40385d1-db50-4403-81b7-49e077122b62"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"nlist", " ", "=", " ", 
+  RowBox[{"Abs", "[", 
+   RowBox[{"Transpose", "[", 
+    RowBox[{"{", 
+     RowBox[{"lvalues", ",", 
+      RowBox[{
+       RowBox[{"10", "^", 
+        RowBox[{"(", 
+         RowBox[{"-", "16"}], ")"}]}], "*", 
+       RowBox[{"nl", "[", 
+        RowBox[{"xval", ",", "lvalues"}], "]"}]}]}], "}"}], "]"}], 
+   "]"}]}]], "Input",ExpressionUUID->"8999843c-f245-4865-8bfc-022d829c5571"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"0", ",", "9.950041652780258`*^-16"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "1.0049875069427086`*^-14"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3.005012479175345`*^-13"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "1.50150125208073`*^-11"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"4", ",", "1.0507503752085935`*^-9"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"5", ",", "9.45525187562526`*^-8"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"6", ",", "0.000010399726312812577`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"7", ",", "0.0013518698681468787`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"8", ",", "0.20277008049571896`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"9", ",", "34.46956181440407`"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"10", ",", "6549.013974656277`"}], "}"}]}], "}"}]], "Output",Expre\
+ssionUUID->"7baa1eb2-3f44-438e-8b17-6654411d66c6"]
+}, Open  ]],
+
+Cell["\<\
+Build the plots first and then display them.  The DisplayFunction stuff just \
+prevents the p1 and p2 plots from being shown by themselves.\
+\>", "Text",ExpressionUUID->"2021a99a-9f00-49b9-b939-1e80596b13f1"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"p1", " ", "=", " ", 
+   RowBox[{"LogListPlot", "[", 
+    RowBox[{"nlist", ",", 
+     RowBox[{"DisplayFunction", "\[Rule]", "Identity"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{" ", 
+  RowBox[{
+   RowBox[{"p2", " ", "=", " ", 
+    RowBox[{"LogListPlot", "[", 
+     RowBox[{"jlist", ",", 
+      RowBox[{"DisplayFunction", "\[Rule]", "Identity"}]}], "]"}]}], 
+   ";"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Show", "[", 
+  RowBox[{"p1", ",", "p2", ",", 
+   RowBox[{"DisplayFunction", "\[Rule]", "$DisplayFunction"}]}], 
+  "]"}]}], "Input",ExpressionUUID->"e149b50f-1e8b-476b-803d-4d83d18965d2"],
+
+Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0238095 0.0952381 0.483956 0.0312782 [
+[.02381 -0.0125 -3 -9 ]
+[.02381 -0.0125 3 0 ]
+[.21429 -0.0125 -3 -9 ]
+[.21429 -0.0125 3 0 ]
+[.40476 -0.0125 -3 -9 ]
+[.40476 -0.0125 3 0 ]
+[.59524 -0.0125 -3 -9 ]
+[.59524 -0.0125 3 0 ]
+[.78571 -0.0125 -3 -9 ]
+[.78571 -0.0125 3 0 ]
+[.97619 -0.0125 -6 -9 ]
+[.97619 -0.0125 6 0 ]
+[-0.0125 .01478 -51.6875 -6.15625 ]
+[-0.0125 .01478 0 6.15625 ]
+[-0.0125 .1399 -51.6875 -6.15625 ]
+[-0.0125 .1399 0 6.15625 ]
+[-0.0125 .26501 -47.4375 -6.125 ]
+[-0.0125 .26501 0 6.125 ]
+[-0.0125 .39012 -34 -4.90625 ]
+[-0.0125 .39012 0 4.90625 ]
+[-0.0125 .51523 -16 -4.90625 ]
+[-0.0125 .51523 0 4.90625 ]
+[ -0.0005 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.02381 0 m
+.02381 .00625 L
+s
+[(0)] .02381 -0.0125 0 1 Mshowa
+.21429 0 m
+.21429 .00625 L
+s
+[(2)] .21429 -0.0125 0 1 Mshowa
+.40476 0 m
+.40476 .00625 L
+s
+[(4)] .40476 -0.0125 0 1 Mshowa
+.59524 0 m
+.59524 .00625 L
+s
+[(6)] .59524 -0.0125 0 1 Mshowa
+.78571 0 m
+.78571 .00625 L
+s
+[(8)] .78571 -0.0125 0 1 Mshowa
+.97619 0 m
+.97619 .00625 L
+s
+[(10)] .97619 -0.0125 0 1 Mshowa
+.125 Mabswid
+.07143 0 m
+.07143 .00375 L
+s
+.11905 0 m
+.11905 .00375 L
+s
+.16667 0 m
+.16667 .00375 L
+s
+.2619 0 m
+.2619 .00375 L
+s
+.30952 0 m
+.30952 .00375 L
+s
+.35714 0 m
+.35714 .00375 L
+s
+.45238 0 m
+.45238 .00375 L
+s
+.5 0 m
+.5 .00375 L
+s
+.54762 0 m
+.54762 .00375 L
+s
+.64286 0 m
+.64286 .00375 L
+s
+.69048 0 m
+.69048 .00375 L
+s
+.7381 0 m
+.7381 .00375 L
+s
+.83333 0 m
+.83333 .00375 L
+s
+.88095 0 m
+.88095 .00375 L
+s
+.92857 0 m
+.92857 .00375 L
+s
+.25 Mabswid
+0 0 m
+1 0 L
+s
+0 .01478 m
+.00625 .01478 L
+s
+gsave
+-0.0125 .01478 -112.688 -10.1562 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.3125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.750 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1.) show
+75.000 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+76.812 13.750 moveto
+%%IncludeResource: font Mathematica1Mono
+%%IncludeFont: Mathematica1Mono
+/Mathematica1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(\\264) show
+84.625 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10) show
+96.625 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+96.625 9.375 moveto
+%%IncludeResource: font Mathematica1Mono
+%%IncludeFont: Mathematica1Mono
+/Mathematica1Mono findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+100.875 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(15) show
+109.375 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .1399 m
+.00625 .1399 L
+s
+gsave
+-0.0125 .1399 -112.688 -10.1562 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.3125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.750 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1.) show
+75.000 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+76.812 13.750 moveto
+%%IncludeResource: font Mathematica1Mono
+%%IncludeFont: Mathematica1Mono
+/Mathematica1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(\\264) show
+84.625 13.750 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10) show
+96.625 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+96.625 9.375 moveto
+%%IncludeResource: font Mathematica1Mono
+%%IncludeFont: Mathematica1Mono
+/Mathematica1Mono findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+100.875 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(11) show
+109.375 9.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .26501 m
+.00625 .26501 L
+s
+gsave
+-0.0125 .26501 -108.438 -10.125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.25 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.688 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1.) show
+75.000 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+76.812 13.688 moveto
+%%IncludeResource: font Mathematica1Mono
+%%IncludeFont: Mathematica1Mono
+/Mathematica1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(\\264) show
+84.625 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10) show
+96.625 9.312 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+96.625 9.312 moveto
+%%IncludeResource: font Mathematica1Mono
+%%IncludeFont: Mathematica1Mono
+/Mathematica1Mono findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+100.875 9.312 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(7) show
+105.125 9.312 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 7.125 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .39012 m
+.00625 .39012 L
+s
+gsave
+-0.0125 .39012 -95 -8.90625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 17.8125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0.001) show
+93.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .51523 m
+.00625 .51523 L
+s
+gsave
+-0.0125 .51523 -77 -8.90625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 17.8125 translate 1 -1 scale
+/g { setgray} bind def
+/k { setcmykcolor} bind def
+/p { gsave} bind def
+/r { setrgbcolor} bind def
+/w { setlinewidth} bind def
+/C { curveto} bind def
+/F { fill} bind def
+/L { lineto} bind def
+/rL { rlineto} bind def
+/P { grestore} bind def
+/s { stroke} bind def
+/S { show} bind def
+/N {currentpoint 3 -1 roll show moveto} bind def
+/Msf { findfont exch scalefont [1 0 0 -1 0 0 ] makefont setfont} bind def
+/m { moveto} bind def
+/Mr { rmoveto} bind def
+/Mx {currentpoint exch pop moveto} bind def
+/My {currentpoint pop exch moveto} bind def
+/X {0 rmoveto} bind def
+/Y {0 exch rmoveto} bind def
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(10) show
+75.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.001 w
+0 .11006 m
+.00375 .11006 L
+s
+0 .11947 m
+.00375 .11947 L
+s
+0 .12498 m
+.00375 .12498 L
+s
+0 .12888 m
+.00375 .12888 L
+s
+0 .13191 m
+.00375 .13191 L
+s
+0 .13439 m
+.00375 .13439 L
+s
+0 .13648 m
+.00375 .13648 L
+s
+0 .1383 m
+.00375 .1383 L
+s
+0 .23517 m
+.00375 .23517 L
+s
+0 .24458 m
+.00375 .24458 L
+s
+0 .25009 m
+.00375 .25009 L
+s
+0 .25399 m
+.00375 .25399 L
+s
+0 .25703 m
+.00375 .25703 L
+s
+0 .2595 m
+.00375 .2595 L
+s
+0 .2616 m
+.00375 .2616 L
+s
+0 .26341 m
+.00375 .26341 L
+s
+0 .36029 m
+.00375 .36029 L
+s
+0 .36969 m
+.00375 .36969 L
+s
+0 .3752 m
+.00375 .3752 L
+s
+0 .37911 m
+.00375 .37911 L
+s
+0 .38214 m
+.00375 .38214 L
+s
+0 .38461 m
+.00375 .38461 L
+s
+0 .38671 m
+.00375 .38671 L
+s
+0 .38852 m
+.00375 .38852 L
+s
+0 .4854 m
+.00375 .4854 L
+s
+0 .49481 m
+.00375 .49481 L
+s
+0 .50031 m
+.00375 .50031 L
+s
+0 .50422 m
+.00375 .50422 L
+s
+0 .50725 m
+.00375 .50725 L
+s
+0 .50973 m
+.00375 .50973 L
+s
+0 .51182 m
+.00375 .51182 L
+s
+0 .51363 m
+.00375 .51363 L
+s
+.25 Mabswid
+0 0 m
+0 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+.008 w
+.02381 .01472 Mdot
+.11905 .04613 Mdot
+.21429 .09229 Mdot
+.30952 .14542 Mdot
+.40476 .20312 Mdot
+.5 .26425 Mdot
+.59524 .3281 Mdot
+.69048 .39422 Mdot
+.78571 .46228 Mdot
+.88095 .53204 Mdot
+.97619 .60332 Mdot
+.02381 .5058 Mdot
+.11905 .4596 Mdot
+.21429 .40647 Mdot
+.30952 .34876 Mdot
+.40476 .28763 Mdot
+.5 .22378 Mdot
+.59524 .15766 Mdot
+.69048 .0896 Mdot
+.78571 .01984 Mdot
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+ ImageSize->{288, 177.938},
+ ImageMargins->{{43, 0}, {0, 0}},
+ ImageRegion->{{0, 1}, {0, 
+  1}},ImageCache->GraphicsData["CompressedBitmap", "\<\
+eJztWl9rE0EQ38vdJVWrIIi0ijRWX602VSiV0hfxH/iqFJ9CEZIHUdrgd/BB
+Eb+Fil9BXxTxS4gifgs1Zucuu3d7v7lsbi/xUpKHzeQ3szOzu7M7c3u51+51
+Hj1u97p77eat/fbTTnfvoHnzyf4A8j0hvI4Q4ltTSLo/IOOGPl3ZxD9mgL4r
+v3zpf0tSdUltKIyoQFJXFbWm5AIl50fK7tAXSfWHn6EWEabgmBXpFX6SF3nC
+yLeAfA1gawDzsXux87ctNa9zHof9Mfy74jAOJEeYJyEvosYaE3ld0/4zSxiY
+S1LTPNPI4JftGN183zB811wxdC5MRzBawfL9QpG9rnxFXISVHxPMJrUN3MkN
+IX97ktuB8pSW9BrQoo8sTV2WFImFCovVUqcSzlFSp0/FmjLGnGNhWp6cW1bs
+i2rRhKiDQWobJlfqPmI/ucuccgM7CrBjU8CmYXcWxxYtO4yN4wBbABh7YhjY
+aYBRu8r7sGhgXFS6+EARXVPQOd6baALxPnSeGV/tYTRHZ3mvlkqej+9qPnbG
+M8ocDQ35rY9K0ozW8AfAtiMd+mhbUpQ+gdHUhwBD46A2DsBLSiOaqiIacUUz
+HAGaBKveBlZYj5UXNwrwV2Srt5THSzYB9re44Tk/n/9JtrQwD3mhLSX0HHB3
++Y7XAfazQpOhI/LC9HuVVthlNE++sLMyOZF6wcryRKoEDeXUJxOtCAzsvpqP
+r7xDLsUAxYzOf2xufQCwL+O5xAQbsuYDDMlRGy9Vfr1QS1Ml2EMZ1lbPG9nS
+sj5zV/YWYD13tcmxVuIkP2T8fdlSDLznhQ4A9q66Y3qhxvSaF3oJsFcl+lQs
+dxfTmkFpJxkZPzogccII0vLkxCmoGT3JaxsNg8slI+YQtjd5AmCmcfnLNgGd
+tLZs1hqu+ZYsE5QJW2Q+KjjwKjpPgP0WQa65FADIPLWr49ljAguVZKOyDfVh
+Mzm6+ULzn9TYUr3RZcuo3lsF+mzi6UBDzySCTeUtEp+xlFB1fqYUQ0I5JVYV
+x5R5akBCORX97KfhYrrowlUfNzp5a4wo/VgfQj1n6Cuz+bVwiAUCDKMHLGwY
+vZFBhz6fNhmfRj9C6NlJzvP/dsjAMldhFfPvM8B2K+kptfEiM+G+mGfVPsgN
+TF9U/kpYD5RBneU1RRpQxq765eWcXyp/RbYUOx8VtcOLNwH2AWDb1R1xhj/N
+rOyQy4M0P34/S/8JMh6WG0qSPabi96j8ZRh+fZlxz/bdHHvPmkmPzhpzpvgw
+6c5bphxV9Hcj4/ER9fktW1runPD9A7DzvHjSjzl/zi/Ep/sPCsyFEZKoPKxX
+Y3REV+hfy0laeP8AaMjg1A==\
+\>", "ImageResolution" -> 72.],ImageRangeCache->{{{0., 359.}, {221.375, 0.}} -> \
+{-2.71924, -18.6083, 0.0452322, \
+0.137726}},ExpressionUUID->"b8df4a31-18c0-4db0-81cc-6ce6ee35c520"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"\[SkeletonIndicator]", "Graphics", "\[SkeletonIndicator]"}],
+  False,
+  Editable->False]], "Output",ExpressionUUID->"65836c7c-6476-43a8-9e7a-\
+5750d45af453"]
+}, Open  ]],
+
+Cell["\<\
+Now check how good the leading term for small x works for 1<x<5:\
+\>", "Text",ExpressionUUID->"e2abedd0-ae22-4f77-b8c1-daf669551547"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Plot", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"2", "*", "lval"}], "+", "1"}], ")"}], "!!"}], 
+    RowBox[{
+     RowBox[{"jl", "[", 
+      RowBox[{"x", ",", "lval"}], "]"}], "/", 
+     RowBox[{"x", "^", 
+      RowBox[{"(", "lval", ")"}]}]}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "1", ",", "5"}], "}"}], ",", 
+   RowBox[{"PlotRange", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "1"}], "}"}]}]}], "]"}]], "Input",ExpressionUUID->\
+"08c43a55-3f8a-44d6-aa34-25ff2f66a3a6"],
+
+Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+-0.214286 0.238095 0 0.618034 [
+[.2619 -0.0125 -3 -9 ]
+[.2619 -0.0125 3 0 ]
+[.5 -0.0125 -3 -9 ]
+[.5 -0.0125 3 0 ]
+[.7381 -0.0125 -3 -9 ]
+[.7381 -0.0125 3 0 ]
+[.97619 -0.0125 -3 -9 ]
+[.97619 -0.0125 3 0 ]
+[.01131 .12361 -18 -4.5 ]
+[.01131 .12361 0 4.5 ]
+[.01131 .24721 -18 -4.5 ]
+[.01131 .24721 0 4.5 ]
+[.01131 .37082 -18 -4.5 ]
+[.01131 .37082 0 4.5 ]
+[.01131 .49443 -18 -4.5 ]
+[.01131 .49443 0 4.5 ]
+[.01131 .61803 -6 -4.5 ]
+[.01131 .61803 0 4.5 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.2619 0 m
+.2619 .00625 L
+s
+[(2)] .2619 -0.0125 0 1 Mshowa
+.5 0 m
+.5 .00625 L
+s
+[(3)] .5 -0.0125 0 1 Mshowa
+.7381 0 m
+.7381 .00625 L
+s
+[(4)] .7381 -0.0125 0 1 Mshowa
+.97619 0 m
+.97619 .00625 L
+s
+[(5)] .97619 -0.0125 0 1 Mshowa
+.125 Mabswid
+.07143 0 m
+.07143 .00375 L
+s
+.11905 0 m
+.11905 .00375 L
+s
+.16667 0 m
+.16667 .00375 L
+s
+.21429 0 m
+.21429 .00375 L
+s
+.30952 0 m
+.30952 .00375 L
+s
+.35714 0 m
+.35714 .00375 L
+s
+.40476 0 m
+.40476 .00375 L
+s
+.45238 0 m
+.45238 .00375 L
+s
+.54762 0 m
+.54762 .00375 L
+s
+.59524 0 m
+.59524 .00375 L
+s
+.64286 0 m
+.64286 .00375 L
+s
+.69048 0 m
+.69048 .00375 L
+s
+.78571 0 m
+.78571 .00375 L
+s
+.83333 0 m
+.83333 .00375 L
+s
+.88095 0 m
+.88095 .00375 L
+s
+.92857 0 m
+.92857 .00375 L
+s
+.25 Mabswid
+0 0 m
+1 0 L
+s
+.02381 .12361 m
+.03006 .12361 L
+s
+[(0.2)] .01131 .12361 1 0 Mshowa
+.02381 .24721 m
+.03006 .24721 L
+s
+[(0.4)] .01131 .24721 1 0 Mshowa
+.02381 .37082 m
+.03006 .37082 L
+s
+[(0.6)] .01131 .37082 1 0 Mshowa
+.02381 .49443 m
+.03006 .49443 L
+s
+[(0.8)] .01131 .49443 1 0 Mshowa
+.02381 .61803 m
+.03006 .61803 L
+s
+[(1)] .01131 .61803 1 0 Mshowa
+.125 Mabswid
+.02381 .0309 m
+.02756 .0309 L
+s
+.02381 .0618 m
+.02756 .0618 L
+s
+.02381 .09271 m
+.02756 .09271 L
+s
+.02381 .15451 m
+.02756 .15451 L
+s
+.02381 .18541 m
+.02756 .18541 L
+s
+.02381 .21631 m
+.02756 .21631 L
+s
+.02381 .27812 m
+.02756 .27812 L
+s
+.02381 .30902 m
+.02756 .30902 L
+s
+.02381 .33992 m
+.02756 .33992 L
+s
+.02381 .40172 m
+.02756 .40172 L
+s
+.02381 .43262 m
+.02756 .43262 L
+s
+.02381 .46353 m
+.02756 .46353 L
+s
+.02381 .52533 m
+.02756 .52533 L
+s
+.02381 .55623 m
+.02756 .55623 L
+s
+.02381 .58713 m
+.02756 .58713 L
+s
+.25 Mabswid
+.02381 0 m
+.02381 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+.5 Mabswid
+.02381 .60473 m
+.06244 .60013 L
+.10458 .59436 L
+.14415 .58827 L
+.18221 .58179 L
+.22272 .57427 L
+.26171 .56643 L
+.30316 .55749 L
+.34309 .54831 L
+.3815 .53898 L
+.42237 .52855 L
+.46172 .51804 L
+.49955 .50754 L
+.53984 .49597 L
+.57861 .48448 L
+.61984 .47192 L
+.65954 .45953 L
+.69774 .44736 L
+.73838 .43419 L
+.77751 .42133 L
+.81909 .4075 L
+.85916 .39406 L
+.89771 .38104 L
+.93871 .36716 L
+.97619 .35445 L
+s
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+ ImageSize->{288, 177.938},
+ ImageMargins->{{43, 0}, {0, 0}},
+ ImageRegion->{{0, 1}, {0, 
+  1}},ImageCache->GraphicsData["CompressedBitmap", "\<\
+eJztml1IVEEUx6+7193U9QMxLKUSo0IqEqmIIJCydG2NIiiiQBYLXdL8yKDA
+h0KoKIqCggIfBB+EgoKiKCoQCoSCgoiIkIooikCIgoKCNmdm+98P59zZXVe7
+2e7D7Ow5v/mfmXPvzpm7bEO4u2VPW7g70hQuq+0Kd7REmvaXbWjvGjN5MzQt
+o0XTtFdlGutHx7qxhr8irNG0VvbmY/Za1tNZL8R6XtYLwpYv8Db+lhmFTOzF
+dDfyjtfs0+oltpDEFhAi++LE+Vz5LBposXb25sGCZBKablnJWH8TrdcBvSB6
+9jWzPNTbk9Yp0QxSNi4rS1uBEGuVuDwpD8BzW4eFyLJseGPL5ObIxPsl0T+p
+rGXNDPGhXDKFgMSW63LOTXNJ9ZzzeJu+VP/AnB0uFW9rppHfA/d6F83K7f50
+1tJZi8Ofxd64OxPr11nPB5vDaFHcx53CDCkhID9wqsT9Er/sqJQtsflSpJ2D
+lfiQqGR0AraMTHxmsqrgVWgTlysnzpBxyetQzETaXHz/p3eFdNZc5Z92WZNV
+GGMzVe0Pygoj2y9Ttcfy4HFtYwkpjl+OH/lIRjTLZtOItCSjzYsrmWizIrG0
+3MQE+Pg8Cam6pn/7Nv8/v9zprLnW756sVWE6BQqyEmShglzKGm4vEqSszPCe
+7rh/LwZcLHQm55GmAsNnCzaxgjGBs/lC5KU0mci6fZ1GDgycXyVOzk0ihnOB
+nYdQ5Ylp26si+0SWoFKsYIGIQtwGst/nSNFZmHqFSVRHVdSjTrfMTIxeIkaT
+34VCkMsUZD7IKgUZALlCQRonhFUK0jjlrDaRxj5l3FVrFEoeDKymyV+QW0tD
+P1jLL4TDLvkdSkEa+gqlEA19htJmGhoFtJWGPgHaRkMfAO2wZ/w9XLvo8W+B
+N9LQayiFaWgE0G4aeolwzTT0HHmO0NBTQG009BhQJw09BHSAhoaxukP2PD/A
++B56/BDGH6ahe4B6aegOAh+loVtQOk5DNwCdpKHrCHdaQImX4avwnhESygqs
+S1TirYmXEe2c0J2KQjyIoBcSCyqrYbYCPADtviS0yavSjwD9U5enPkxpQASd
+hB8sL2Jhg6YYPETAMSPn4b0kBsq+D2cBXaGhU4Cu0dAJzPMmDR0DdJuGehHu
+rgnit9ERjB+ix/dg/H0aOghomIa6AT2iIf6/D34mfEJDe6H0jIaaAb2goSZA
+IzTUCOgNDe0E9M6e5+1Y00d6/BZAozTUgCBfaKgOSt9oqAZKP2moGlCUhvhp
+zgeTTpPLrWQ2TfLnOz9MDg+Oi6yaxfbcl1v9c2ilUis5nyaLrLOroMk8q2Yl
+TfqtmivN5LinMEPRfFQ2sHXCWgxW9fNZicQ/pWMMkwPJ21Bq/MbTGbeKf46J
+fuxgqWX8BnGL1Kg=\
+\>", "ImageResolution" -> 72.],ImageRangeCache->{{{0., 359.}, {221.375, 0.}} -> \
+{0.553561, -0.0763556, 0.0161874, \
+0.00623612}},ExpressionUUID->"438934a3-d6d8-4710-8060-9aff8a99f399"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"\[SkeletonIndicator]", "Graphics", "\[SkeletonIndicator]"}],
+  False,
+  Editable->False]], "Output",ExpressionUUID->"c02fed3b-3e76-4a46-b94e-\
+f39714bf58dd"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Plot", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"-", 
+     RowBox[{"nl", "[", 
+      RowBox[{"x", ",", "lval"}], "]"}]}], "*", 
+    RowBox[{
+     RowBox[{"x", "^", 
+      RowBox[{"(", 
+       RowBox[{"lval", "+", "1"}], ")"}]}], "/", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"2", "*", "lval"}], "-", "1"}], ")"}], "!!"}]}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "1", ",", "5"}], "}"}], ",", 
+   RowBox[{"PlotRange", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "2"}], "}"}]}]}], "]"}]], "Input",ExpressionUUID->\
+"34996e3c-128f-4b2f-af0e-84c77819c4a0"],
+
+Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+-0.214286 0.238095 0 0.309017 [
+[.2619 -0.0125 -3 -9 ]
+[.2619 -0.0125 3 0 ]
+[.5 -0.0125 -3 -9 ]
+[.5 -0.0125 3 0 ]
+[.7381 -0.0125 -3 -9 ]
+[.7381 -0.0125 3 0 ]
+[.97619 -0.0125 -3 -9 ]
+[.97619 -0.0125 3 0 ]
+[.01131 .07725 -24 -4.5 ]
+[.01131 .07725 0 4.5 ]
+[.01131 .15451 -18 -4.5 ]
+[.01131 .15451 0 4.5 ]
+[.01131 .23176 -24 -4.5 ]
+[.01131 .23176 0 4.5 ]
+[.01131 .30902 -6 -4.5 ]
+[.01131 .30902 0 4.5 ]
+[.01131 .38627 -24 -4.5 ]
+[.01131 .38627 0 4.5 ]
+[.01131 .46353 -18 -4.5 ]
+[.01131 .46353 0 4.5 ]
+[.01131 .54078 -24 -4.5 ]
+[.01131 .54078 0 4.5 ]
+[.01131 .61803 -6 -4.5 ]
+[.01131 .61803 0 4.5 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.2619 0 m
+.2619 .00625 L
+s
+[(2)] .2619 -0.0125 0 1 Mshowa
+.5 0 m
+.5 .00625 L
+s
+[(3)] .5 -0.0125 0 1 Mshowa
+.7381 0 m
+.7381 .00625 L
+s
+[(4)] .7381 -0.0125 0 1 Mshowa
+.97619 0 m
+.97619 .00625 L
+s
+[(5)] .97619 -0.0125 0 1 Mshowa
+.125 Mabswid
+.07143 0 m
+.07143 .00375 L
+s
+.11905 0 m
+.11905 .00375 L
+s
+.16667 0 m
+.16667 .00375 L
+s
+.21429 0 m
+.21429 .00375 L
+s
+.30952 0 m
+.30952 .00375 L
+s
+.35714 0 m
+.35714 .00375 L
+s
+.40476 0 m
+.40476 .00375 L
+s
+.45238 0 m
+.45238 .00375 L
+s
+.54762 0 m
+.54762 .00375 L
+s
+.59524 0 m
+.59524 .00375 L
+s
+.64286 0 m
+.64286 .00375 L
+s
+.69048 0 m
+.69048 .00375 L
+s
+.78571 0 m
+.78571 .00375 L
+s
+.83333 0 m
+.83333 .00375 L
+s
+.88095 0 m
+.88095 .00375 L
+s
+.92857 0 m
+.92857 .00375 L
+s
+.25 Mabswid
+0 0 m
+1 0 L
+s
+.02381 .07725 m
+.03006 .07725 L
+s
+[(0.25)] .01131 .07725 1 0 Mshowa
+.02381 .15451 m
+.03006 .15451 L
+s
+[(0.5)] .01131 .15451 1 0 Mshowa
+.02381 .23176 m
+.03006 .23176 L
+s
+[(0.75)] .01131 .23176 1 0 Mshowa
+.02381 .30902 m
+.03006 .30902 L
+s
+[(1)] .01131 .30902 1 0 Mshowa
+.02381 .38627 m
+.03006 .38627 L
+s
+[(1.25)] .01131 .38627 1 0 Mshowa
+.02381 .46353 m
+.03006 .46353 L
+s
+[(1.5)] .01131 .46353 1 0 Mshowa
+.02381 .54078 m
+.03006 .54078 L
+s
+[(1.75)] .01131 .54078 1 0 Mshowa
+.02381 .61803 m
+.03006 .61803 L
+s
+[(2)] .01131 .61803 1 0 Mshowa
+.125 Mabswid
+.02381 .01545 m
+.02756 .01545 L
+s
+.02381 .0309 m
+.02756 .0309 L
+s
+.02381 .04635 m
+.02756 .04635 L
+s
+.02381 .0618 m
+.02756 .0618 L
+s
+.02381 .09271 m
+.02756 .09271 L
+s
+.02381 .10816 m
+.02756 .10816 L
+s
+.02381 .12361 m
+.02756 .12361 L
+s
+.02381 .13906 m
+.02756 .13906 L
+s
+.02381 .16996 m
+.02756 .16996 L
+s
+.02381 .18541 m
+.02756 .18541 L
+s
+.02381 .20086 m
+.02756 .20086 L
+s
+.02381 .21631 m
+.02756 .21631 L
+s
+.02381 .24721 m
+.02756 .24721 L
+s
+.02381 .26266 m
+.02756 .26266 L
+s
+.02381 .27812 m
+.02756 .27812 L
+s
+.02381 .29357 m
+.02756 .29357 L
+s
+.02381 .32447 m
+.02756 .32447 L
+s
+.02381 .33992 m
+.02756 .33992 L
+s
+.02381 .35537 m
+.02756 .35537 L
+s
+.02381 .37082 m
+.02756 .37082 L
+s
+.02381 .40172 m
+.02756 .40172 L
+s
+.02381 .41717 m
+.02756 .41717 L
+s
+.02381 .43262 m
+.02756 .43262 L
+s
+.02381 .44807 m
+.02756 .44807 L
+s
+.02381 .47898 m
+.02756 .47898 L
+s
+.02381 .49443 m
+.02756 .49443 L
+s
+.02381 .50988 m
+.02756 .50988 L
+s
+.02381 .52533 m
+.02756 .52533 L
+s
+.02381 .55623 m
+.02756 .55623 L
+s
+.02381 .57168 m
+.02756 .57168 L
+s
+.02381 .58713 m
+.02756 .58713 L
+s
+.02381 .60258 m
+.02756 .60258 L
+s
+.25 Mabswid
+.02381 0 m
+.02381 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+.5 Mabswid
+.02381 .31727 m
+.06244 .32022 L
+.10458 .32399 L
+.14415 .32808 L
+.18221 .33252 L
+.22272 .33782 L
+.26171 .34352 L
+.30316 .35024 L
+.34309 .3574 L
+.3815 .36497 L
+.42237 .3738 L
+.46172 .3831 L
+.49955 .39283 L
+.53984 .40412 L
+.57861 .41594 L
+.61984 .42962 L
+.65954 .44397 L
+.69774 .45896 L
+.73838 .4763 L
+.77751 .49445 L
+.81909 .51546 L
+.85916 .53756 L
+.89771 .5607 L
+.93871 .58755 L
+.97619 .61431 L
+s
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+ ImageSize->{288, 177.938},
+ ImageMargins->{{43, 0}, {0, 0}},
+ ImageRegion->{{0, 1}, {0, 
+  1}},ImageCache->GraphicsData["CompressedBitmap", "\<\
+eJztmn+ITVsUx8/MvXOHmTt+/2bG+JHJjyYaEtLzyPzAkNBLJOPnTMIYoygl
+ei95vdfrvaIoSqIokt57vYiSPxQpSvISEkVIkaTImL338d3n7lnr7H3nHr+m
+O3/su2ev7/qstfc5Z59190xtXXP96vV1zQ0r60qrmuoa6xtWbi6t3NjUOhTL
+8byces/z7pV6ot/S2vUb+dMgGs9rFB8JMV4lenHRmy16MdGbhbFCJd8kP/Ja
+gPF/vE9uXixo82qIsVpirJOCNBGmOcRYpWhlFnN52GbxkSssLMKLp8yktT+P
+5zWDV4PeLEOOdQgu2hbHhakGllrKpII1EqbcyAPIta3GRKgFrDGnKYcbMu+X
+tHxaykrR5KlfRrAZp44VRaz7EjE6Ss4Fss1equ8g55BLJdtpadhzYf4xQmo2
+q+84K7lpx7B9S35c9GSpERM9+epIWDjSp+1bWkPV24EuSPIJeMwSkLJTr9cC
+YqwTF08PpRmlEPNk2RHMJYko7hfGla32Hvr6dLbEYC5+IRs6gzC6kMnDvaoX
+4tt8arN7zVfMSt7Yxg4ne06Pj3pNh+xr1E1re975B8NeD3x2dps90JUoV8Jp
+UdMiGmPUuyLIZi4YVW45oeLwdppaR3pyslm5Z0XVUdS9YryvMqmoqNv3c1ZS
+1FP7zcRrd+VGbQxSF2l1xUZJc0v6OpVWmt8FOtJznc3KPauB4iOBTSpEWULY
+v6hPm+0iUnoCQ1PTo8tnrABDFcp7EDKmtgdZyOVjaIzy0VewdypzaMBukGSW
+SQz14ZWjUplJXjk+dT0SvHIy5vHBnMJ0QN7y/lXwf8mL5oL0jBctBOkRL1oC
+0j0z3RUw3eb914pWbqc3edE6iK7zoo2ilfv8VV7UDNJlM91tMF3i/bcjyAUl
+imGScZBcD452wnpWwdhKKbKjo18Q8l8+JPWWdj3P2YMAZ/gARZhT+BHU74Cd
+4mFdAAtf7T9hPcHDuoasMVUt7BWtlB/lodTZW7plyQFkf1jJ4lilJHIIr6oP
+wXpQIfS9fwSm/QGT4X8MEffxouMg/cWLToL0By86DdFvZrp/o/cr7/8P/Hfz
+ov8g+pkXnUO4XbzoPEg7zHQvwrSd97+EhdvKiy6DtIUXXYGoiRddQ3aNZrrX
+0dvA+99AkHVKpCtkY8di78eb0Pl/SO1CiDTM9YTpFjJbw2O7OsL+R/hV7YDJ
+oTtArOARhaErdReI5RaEw/eo+4Atyxz2ALClCpbEvItCp/QQusXKUd9/j9H7
+KWAy/J9AtIgXPYVoAS96DtF8XvQConlmui/Rq+X9X0E0mxe9hqiGF72BqIoX
+vYVoppnuO/Rm8P7vIQr5zvMBoh94kWxzoJxqUcagnGImLu36rxuTLKR8KCcq
+JVWptfNoqjMAExQ7vHDL+IRK/1mtgo9HnWSnFYUCjI0onh7S5VoIm9qSHE6j
+uoFd3g62w1xk24MwjObjRVH9ybYnZudHM0pA1+Op3uCMVBzjGeuHX8sCdorU
+nzAMt/gMAN2mHEQYhlh8ikEPKvXcSgnHEguT8im2+AxBWJtyGGEYYPEZDnpQ
+qWdZRjj2tTDLgLApRxKGXhafUaDblGMIQ3dyluWEspuFXg6Er3Q4rBtLGNTm
+p46kmOeY5Y1DDj6lmFCyT28FYfD/OaoEYOmtNdOUfXDq+lWrUer2lm1lYIUc
+9ss2PnpZ/HJG9v1a38v5CLrmazw=\
+\>", "ImageResolution" -> 72.],ImageRangeCache->{{{0., 359.}, {221.375, 0.}} -> \
+{0.504999, -0.152711, 0.0161874, \
+0.0124722}},ExpressionUUID->"5bbb5872-70cf-441b-8fbc-b3964885f356"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"\[SkeletonIndicator]", "Graphics", "\[SkeletonIndicator]"}],
+  False,
+  Editable->False]], "Output",ExpressionUUID->"3ca60e1e-4d82-4129-b05c-\
+64d72a66a92f"]
+}, Open  ]],
+
+Cell["Finally, check out the ratio of these approximations:", "Text",ExpressionUUID->"4b141096-0baf-4b90-8556-3d0fcf4bdc0a"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Plot", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"-", 
+       RowBox[{"nl", "[", 
+        RowBox[{"x", ",", "lval"}], "]"}]}], "*", 
+      RowBox[{
+       RowBox[{"x", "^", 
+        RowBox[{"(", 
+         RowBox[{"lval", "+", "1"}], ")"}]}], "/", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"2", "*", "lval"}], "-", "1"}], ")"}], "!!"}]}]}], ")"}], "/", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"2", "*", "lval"}], "+", "1"}], ")"}], "!!"}], 
+      RowBox[{
+       RowBox[{"jl", "[", 
+        RowBox[{"x", ",", "lval"}], "]"}], "/", 
+       RowBox[{"x", "^", 
+        RowBox[{"(", "lval", ")"}]}]}]}], ")"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "1", ",", "5"}], "}"}], ",", 
+   RowBox[{"PlotRange", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "3"}], "}"}]}]}], "]"}]], "Input",ExpressionUUID->\
+"6e854277-27d8-4886-b606-f898ff1066b8"],
+
+Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+-0.214286 0.238095 0 0.206011 [
+[.2619 -0.0125 -3 -9 ]
+[.2619 -0.0125 3 0 ]
+[.5 -0.0125 -3 -9 ]
+[.5 -0.0125 3 0 ]
+[.7381 -0.0125 -3 -9 ]
+[.7381 -0.0125 3 0 ]
+[.97619 -0.0125 -3 -9 ]
+[.97619 -0.0125 3 0 ]
+[.01131 .10301 -18 -4.5 ]
+[.01131 .10301 0 4.5 ]
+[.01131 .20601 -6 -4.5 ]
+[.01131 .20601 0 4.5 ]
+[.01131 .30902 -18 -4.5 ]
+[.01131 .30902 0 4.5 ]
+[.01131 .41202 -6 -4.5 ]
+[.01131 .41202 0 4.5 ]
+[.01131 .51503 -18 -4.5 ]
+[.01131 .51503 0 4.5 ]
+[.01131 .61803 -6 -4.5 ]
+[.01131 .61803 0 4.5 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.2619 0 m
+.2619 .00625 L
+s
+[(2)] .2619 -0.0125 0 1 Mshowa
+.5 0 m
+.5 .00625 L
+s
+[(3)] .5 -0.0125 0 1 Mshowa
+.7381 0 m
+.7381 .00625 L
+s
+[(4)] .7381 -0.0125 0 1 Mshowa
+.97619 0 m
+.97619 .00625 L
+s
+[(5)] .97619 -0.0125 0 1 Mshowa
+.125 Mabswid
+.07143 0 m
+.07143 .00375 L
+s
+.11905 0 m
+.11905 .00375 L
+s
+.16667 0 m
+.16667 .00375 L
+s
+.21429 0 m
+.21429 .00375 L
+s
+.30952 0 m
+.30952 .00375 L
+s
+.35714 0 m
+.35714 .00375 L
+s
+.40476 0 m
+.40476 .00375 L
+s
+.45238 0 m
+.45238 .00375 L
+s
+.54762 0 m
+.54762 .00375 L
+s
+.59524 0 m
+.59524 .00375 L
+s
+.64286 0 m
+.64286 .00375 L
+s
+.69048 0 m
+.69048 .00375 L
+s
+.78571 0 m
+.78571 .00375 L
+s
+.83333 0 m
+.83333 .00375 L
+s
+.88095 0 m
+.88095 .00375 L
+s
+.92857 0 m
+.92857 .00375 L
+s
+.25 Mabswid
+0 0 m
+1 0 L
+s
+.02381 .10301 m
+.03006 .10301 L
+s
+[(0.5)] .01131 .10301 1 0 Mshowa
+.02381 .20601 m
+.03006 .20601 L
+s
+[(1)] .01131 .20601 1 0 Mshowa
+.02381 .30902 m
+.03006 .30902 L
+s
+[(1.5)] .01131 .30902 1 0 Mshowa
+.02381 .41202 m
+.03006 .41202 L
+s
+[(2)] .01131 .41202 1 0 Mshowa
+.02381 .51503 m
+.03006 .51503 L
+s
+[(2.5)] .01131 .51503 1 0 Mshowa
+.02381 .61803 m
+.03006 .61803 L
+s
+[(3)] .01131 .61803 1 0 Mshowa
+.125 Mabswid
+.02381 .0206 m
+.02756 .0206 L
+s
+.02381 .0412 m
+.02756 .0412 L
+s
+.02381 .0618 m
+.02756 .0618 L
+s
+.02381 .0824 m
+.02756 .0824 L
+s
+.02381 .12361 m
+.02756 .12361 L
+s
+.02381 .14421 m
+.02756 .14421 L
+s
+.02381 .16481 m
+.02756 .16481 L
+s
+.02381 .18541 m
+.02756 .18541 L
+s
+.02381 .22661 m
+.02756 .22661 L
+s
+.02381 .24721 m
+.02756 .24721 L
+s
+.02381 .26781 m
+.02756 .26781 L
+s
+.02381 .28842 m
+.02756 .28842 L
+s
+.02381 .32962 m
+.02756 .32962 L
+s
+.02381 .35022 m
+.02756 .35022 L
+s
+.02381 .37082 m
+.02756 .37082 L
+s
+.02381 .39142 m
+.02756 .39142 L
+s
+.02381 .43262 m
+.02756 .43262 L
+s
+.02381 .45322 m
+.02756 .45322 L
+s
+.02381 .47383 m
+.02756 .47383 L
+s
+.02381 .49443 m
+.02756 .49443 L
+s
+.02381 .53563 m
+.02756 .53563 L
+s
+.02381 .55623 m
+.02756 .55623 L
+s
+.02381 .57683 m
+.02756 .57683 L
+s
+.02381 .59743 m
+.02756 .59743 L
+s
+.25 Mabswid
+.02381 0 m
+.02381 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+.5 Mabswid
+.02381 .21617 m
+.06244 .21985 L
+.10458 .2246 L
+.14415 .22979 L
+.18221 .23549 L
+.22272 .24238 L
+.26171 .24988 L
+.30316 .25885 L
+.34309 .26857 L
+.3815 .279 L
+.42237 .29139 L
+.46172 .30469 L
+.49955 .3189 L
+.53984 .33572 L
+.57861 .35373 L
+.61984 .37509 L
+.65954 .39808 L
+.69774 .42271 L
+.73838 .45198 L
+.77751 .48353 L
+.81909 .52118 L
+.85916 .56207 L
+.89771 .60629 L
+s
+.89771 .60629 m
+.90679 .61803 L
+s
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+ ImageSize->{288, 177.938},
+ ImageMargins->{{43, 0}, {0, 0}},
+ ImageRegion->{{0, 1}, {0, 
+  1}},ImageCache->GraphicsData["CompressedBitmap", "\<\
+eJztmnuIFVUcx2f33l3X1dXVHtqqsBWlVvbUHlY+ergP3VUphZSCqy3torar
+ayKFIEVIiYhohUj0EEOkMESkwlJRFKnESMKwNAzsLWWR9lz3/M74nbnj9zdn
+9skuun/MPfv9fb7fOefM3XNnzt2qzMLamnmZhXWzM6VlCzINtXWzG0sn1C9o
+llI5npdT63ne0VLPtJuam/5BfurMwfPmmpd8o5eZVtq0JplWyrQqoPW1+Dx5
+yWtCjP9jcidKIxWueZVEm0S03jbkyYS49FV6UaWH1ZuXXAyIRXjprJE0t6v1
+vAbkVaAVHbOZh8ropM0nmRWaJrFs2opt2FxSym33E8jclmMgbJaDqj9Mkeva
+3i5pOjeVZeZQYH+5inShN9GKujjXlfrS3n3uI8eLl6ob9DnmUsnxgU6s56L8
+YBfq1YU5qu7Z6y43qp7mRcp5OL+05AMz3+G2H3nn3ZsEUT1JQMoR2oPU2Y0D
+Wy06PDuQWpgoM5FoUluUGNGYN5ytXDC2GCeKSsOdaGjd82/kAu71xVF1ylkH
+mJd8LJ0xZAmpt9pz3mLWrumd5ekBaZwlB2JsbA1Lm2MRpNush12hfuZYCGl4
+iJR3yGDTykf9aj3pymxyiE4OzSYH6OSI7LEX6+TI7MxCnRydnZnSyfHI/Dc6
+LeUo/an75UFdPjNO6dBUc5Qn/F90aDqSftChGXY4zdIJHXoUScejY5oF/zHd
+/zigr3ToCZzksA7NAXRIh+oBHdShRvTpUx1ahKT90YE/A/9e3b8E0G4dWgpo
+pw49h55st5D8BcubKY0+xd+fLsN53rcRhQQKwpLeob6I2G16bN+EYStw+q2t
+CBNpJSK26BG9YmdqFcI2OyIS3BquQX/eaXvYy+jZJhtWAKEodkhr0YuN1sje
+ZOsQtiEEies1lN7U/W8Af12H1iPpVR16C0nrdGgjoLU6tAnQKzr0NqCXogPf
+jNZq3f8uoFU6tAXQSh3aCmiFDm0DtFyH3gP0gg59AGhZdOAfovW87v+IaM/q
++A5kxkC7AC3Vod1EW6Lje5AZhkTYR/Cn9aR9MMZA+wEt1qGPifaUjn+CTB+K
+vzc+ALzR4nLzp3zxwwIOEq3BGq4gJVl0RPoMZ/bxEghsZfqcaPZLKm8QjKyD
+h1D18cEEYh8yX8A4JzSTCTYWWNhhotWGYvO0cX+JXvg4u+hHiFYTwsX/NVo1
+etJRos3S8WNEy+j4N+hCDHScaI/p+LfIDEMinCD4TD2J4TN0/DuiPaLj36Nb
+MdCPRJuu4z8RbZqO/0y0h6OTdpJAD+mZJ2GMgX4l2hQd/41ok3X8FNGqdfx3
+olXp+B8YYBgS4TTBK/Ukhlfo+Bmilev4X0Sz33234iHgb6JNsGF2C5R/QLT8
+seAfOPx4ZizWwkT6j1Tvt2GFSFcjItr/RLvPhvVCWPxjQRPRxtsItk/com3o
+HFIYZ7M7ZNubBYwNnU/eBgn2r9lUj7E56t5emhTuDXmCXUZ22nsc6cxzdwd4
+2NSOdngKSOEuh4dd1jsdHvaIeUfIE8wwe+Pe7khnnlEOD/veaKTD04cUYnYl
+5cj2Bm51eNgScksbPcEM9yfkzY505rnJ4bmEFG50eC4lhREOz2WkcIPDczkp
+XE9ni92Kh0mWzjzXOTwDSWG4w8Mee4ZZj3RBVkp1xWXb9EOtexApsUWyXXMY
+fK0jJ5DYs9Y11i3TFFzRaj1TjhOT1YMZDqdK2/+vMy/nLPId36s=\
+\>", "ImageResolution" -> 72.],ImageRangeCache->{{{0., 359.}, {221.375, 0.}} -> \
+{0.553561, -0.229067, 0.0161874, \
+0.0187084}},ExpressionUUID->"35231a61-ec32-4337-8c6b-e4c33f39b40e"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"\[SkeletonIndicator]", "Graphics", "\[SkeletonIndicator]"}],
+  False,
+  Editable->False]], "Output",ExpressionUUID->"7cbf98b4-f118-46b2-835f-\
+06643412aceb"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowToolbars->"EditBar",
+WindowSize->{1058, 866},
+WindowMargins->{{43, Automatic}, {Automatic, 24}},
+PrintingPageRange->{Automatic, Automatic},
+PrintingOptions->{"Magnification"->1,
+"PaperOrientation"->"Portrait",
+"PaperSize"->{612, 792},
+"PostScriptOutputFile":>FrontEnd`FileName[{$RootDirectory, "home", "furnstah",
+    "public_html", "mathematica", "nbs"}, "bessel_slope.nb.ps", 
+  CharacterEncoding -> "iso8859-1"]},
+PrivateNotebookOptions->{"VersionedStylesheet"->{"Default.nb"[8.] -> False}},
+Magnification->1.25,
+FrontEndVersion->"14.2 for Mac OS X ARM (64-bit) (December 26, 2024)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"1d65b40c-9d4f-4297-b186-018a1ccd8f5f"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "Info3283057598-3083749"->{
+  Cell[2172, 60, 342, 10, 28, "Print",ExpressionUUID->"e7900900-54d5-4c1d-9aa9-e44eff75efbc",
+   CellTags->"Info3283057598-3083749"]},
+ "Info3283057600-1041746"->{
+  Cell[2659, 78, 343, 10, 28, "Print",ExpressionUUID->"8badf443-453e-4872-9213-e68c602e5257",
+   CellTags->"Info3283057600-1041746"]},
+ "Info3283057600-9948359"->{
+  Cell[5911, 188, 371, 10, 28, "Print",ExpressionUUID->"8653e7b4-a606-4f98-8318-93239ab47e90",
+   CellTags->"Info3283057600-9948359"]},
+ "Info3283057600-2400139"->{
+  Cell[6434, 206, 444, 11, 52, "Print",ExpressionUUID->"ac4210d7-0166-4bed-87a2-b229776d5eb1",
+   CellTags->"Info3283057600-2400139"]},
+ "Info3283057967-6651861"->{
+  Cell[11804, 388, 367, 10, 28, "Print",ExpressionUUID->"c705bffe-e6f3-4793-99ed-2e173679219e",
+   CellTags->"Info3283057967-6651861"]},
+ "Info3283058100-5902494"->{
+  Cell[40919, 1539, 397, 10, 52, "Print",ExpressionUUID->"f01e43ba-6908-42d9-9832-1466b8c16e30",
+   CellTags->"Info3283058100-5902494"]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"Info3283057598-3083749", 82917, 3426},
+ {"Info3283057600-1041746", 83081, 3429},
+ {"Info3283057600-9948359", 83245, 3432},
+ {"Info3283057600-2400139", 83410, 3435},
+ {"Info3283057967-6651861", 83575, 3438},
+ {"Info3283058100-5902494", 83741, 3441}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 163, 2, 65, "Subtitle",ExpressionUUID->"32724a12-908c-4f69-b769-86facf605b73"],
+Cell[745, 26, 445, 8, 96, "Text",ExpressionUUID->"8f419922-84ac-4875-a072-2cc92f51f7e8"],
+Cell[CellGroupData[{
+Cell[1215, 38, 91, 0, 54, "Subsubsection",ExpressionUUID->"345e6c0c-aefd-4f41-a109-60f067431847"],
+Cell[1309, 40, 570, 9, 124, "Text",ExpressionUUID->"d369c76b-0ede-4d83-9cb5-9c8bbde1b4d4"],
+Cell[1882, 51, 157, 2, 42, "Text",ExpressionUUID->"6608fd90-5ffc-4d55-8588-4fdba8f07109"],
+Cell[CellGroupData[{
+Cell[2064, 57, 105, 1, 36, "Input",ExpressionUUID->"8cda1c55-5962-42ef-a30d-c1b7dd2808cf"],
+Cell[2172, 60, 342, 10, 28, "Print",ExpressionUUID->"e7900900-54d5-4c1d-9aa9-e44eff75efbc",
+ CellTags->"Info3283057598-3083749"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2551, 75, 105, 1, 36, "Input",ExpressionUUID->"23d9cd82-c9e0-442e-81b5-be5cf63311b3"],
+Cell[2659, 78, 343, 10, 28, "Print",ExpressionUUID->"8badf443-453e-4872-9213-e68c602e5257",
+ CellTags->"Info3283057600-1041746"]
+}, Open  ]],
+Cell[3017, 91, 234, 3, 69, "Text",ExpressionUUID->"0dc3cc5c-8664-4851-bc78-8e173c1b4581"],
+Cell[3254, 96, 414, 13, 36, "Input",ExpressionUUID->"f03eeff6-613d-4a35-8bb6-4cd77283998c"],
+Cell[3671, 111, 409, 13, 36, "Input",ExpressionUUID->"17490361-37f0-4fc0-b787-74d31b11b724"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4117, 129, 114, 0, 54, "Subsubsection",ExpressionUUID->"c86433da-8586-4e38-9a58-9a8def7aa2d5"],
+Cell[4234, 131, 183, 3, 42, "Text",ExpressionUUID->"dbce2e35-8eea-4cf5-9eda-aceab2d21c51"],
+Cell[CellGroupData[{
+Cell[4442, 138, 139, 3, 36, "Input",ExpressionUUID->"4f0c4341-2b28-43f8-a955-63ce01ec44ac"],
+Cell[4584, 143, 121, 1, 41, "Output",ExpressionUUID->"a96e0bbb-7e9a-4c1d-95ed-946bb8b77c3c"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4742, 149, 194, 5, 36, "Input",ExpressionUUID->"19a1fb93-0a89-4dd2-8574-30a02638676a"],
+Cell[4939, 156, 121, 1, 41, "Output",ExpressionUUID->"09fa67d3-bdf5-4cdf-aa31-b2b1621a7fb8"]
+}, Open  ]],
+Cell[5075, 160, 225, 5, 42, "Text",ExpressionUUID->"f656d39a-02dc-40a8-9929-a6134f27dd76"],
+Cell[CellGroupData[{
+Cell[5325, 169, 176, 4, 36, "Input",ExpressionUUID->"f2079adc-7491-43b6-bd79-da73f8c613fd"],
+Cell[5504, 175, 98, 0, 41, "Output",ExpressionUUID->"65f5faff-8c04-41c5-b234-8f1712b893fb"]
+}, Open  ]],
+Cell[5617, 178, 158, 3, 42, "Text",ExpressionUUID->"8e5abff6-8bc7-4f6b-aea9-ea236cc73558"],
+Cell[CellGroupData[{
+Cell[5800, 185, 108, 1, 36, "Input",ExpressionUUID->"7c9da8fb-0681-422f-bc37-7989190aca0b"],
+Cell[5911, 188, 371, 10, 28, "Print",ExpressionUUID->"8653e7b4-a606-4f98-8318-93239ab47e90",
+ CellTags->"Info3283057600-9948359"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6319, 203, 112, 1, 36, "Input",ExpressionUUID->"8df0858a-dace-46bd-ba44-ccf32d778e7a"],
+Cell[6434, 206, 444, 11, 52, "Print",ExpressionUUID->"ac4210d7-0166-4bed-87a2-b229776d5eb1",
+ CellTags->"Info3283057600-2400139"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6915, 222, 203, 5, 36, "Input",ExpressionUUID->"364a1f18-d266-4ecf-afb8-ce794814fe9b"],
+Cell[7121, 229, 216, 6, 41, "Output",ExpressionUUID->"505ab499-8b66-4495-b29a-66c8a468c2ca"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7374, 240, 207, 5, 36, "Input",ExpressionUUID->"acd2fd06-15b8-4671-a21f-c4954e93858d"],
+Cell[7584, 247, 283, 8, 41, "Output",ExpressionUUID->"baa982c1-0d6e-4862-a3fc-31711029d58b"]
+}, Open  ]],
+Cell[7882, 258, 166, 3, 42, "Text",ExpressionUUID->"74b4d328-5028-4f83-bd8a-f0bf01f86463"],
+Cell[8051, 263, 203, 5, 36, "Input",ExpressionUUID->"0f5be0f1-9005-4008-b06c-36a07615b3b4"],
+Cell[CellGroupData[{
+Cell[8279, 272, 278, 7, 36, "Input",ExpressionUUID->"0c28c668-6bcf-4ccc-9afe-394040cb409f"],
+Cell[8560, 281, 186, 3, 57, "Output",ExpressionUUID->"48d62db3-92a6-4842-a0ba-3cb2aeb57608"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8795, 290, 105, 0, 54, "Subsubsection",ExpressionUUID->"34b4cc00-051f-488d-8247-c5132a4cfb64"],
+Cell[8903, 292, 206, 3, 69, "Text",ExpressionUUID->"d544b590-5e8f-46bb-85f0-763df5a0aacb"],
+Cell[9112, 297, 138, 3, 36, "Input",ExpressionUUID->"4bb85fd9-ea1d-4717-96e7-eab5cac56c51"],
+Cell[9253, 302, 184, 3, 42, "Text",ExpressionUUID->"cf06dcbf-2003-439e-bde8-4fc87c619d59"],
+Cell[CellGroupData[{
+Cell[9462, 309, 257, 7, 36, "Input",ExpressionUUID->"7c78449f-6324-4617-93d7-e1b0b16ee7e3"],
+Cell[9722, 318, 522, 16, 59, "Output",ExpressionUUID->"e7bebdb2-0575-49f4-90dc-ced993892170"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[10281, 339, 277, 8, 36, "Input",ExpressionUUID->"9d7786e6-2f5a-4479-94b9-fd655e0fa613"],
+Cell[10561, 349, 567, 18, 59, "Output",ExpressionUUID->"571514b6-80f0-4085-bab7-5a8cf7c03e6b"]
+}, Open  ]],
+Cell[11143, 370, 405, 8, 96, "Text",ExpressionUUID->"2166fd0a-604c-438d-8205-7a8f5b08b67b"],
+Cell[11551, 380, 117, 1, 36, "Input",ExpressionUUID->"cab936b7-e3fe-4755-91ea-ccd45b1e774f"],
+Cell[CellGroupData[{
+Cell[11693, 385, 108, 1, 36, "Input",ExpressionUUID->"9b61e7ca-3080-40f0-bc10-46bf2b253232"],
+Cell[11804, 388, 367, 10, 28, "Print",ExpressionUUID->"c705bffe-e6f3-4793-99ed-2e173679219e",
+ CellTags->"Info3283057967-6651861"]
+}, Open  ]],
+Cell[12186, 401, 121, 0, 42, "Text",ExpressionUUID->"f783280a-2a66-4636-a80a-02f66322c4d4"],
+Cell[CellGroupData[{
+Cell[12332, 405, 538, 16, 36, "Input",ExpressionUUID->"ff064104-05f9-4257-b7a8-3c404fc9508d"],
+Cell[12873, 423, 24880, 1017, 232, 22547, 977, "GraphicsData", "PostScript", "Graphics",ExpressionUUID->"77a659e8-ae9b-478a-b936-bb5edcf0734b"],
+Cell[37756, 1442, 191, 5, 41, "Output",ExpressionUUID->"b0a31ae3-9ec0-43d4-868b-8c694dea9776"]
+}, Open  ]],
+Cell[37962, 1450, 224, 5, 96, "Text",ExpressionUUID->"1fee35b2-a344-46e6-a6b7-44df17b38781"],
+Cell[38189, 1457, 139, 3, 36, "Input",ExpressionUUID->"a87bcbfc-0bcf-4aec-865a-b012d7624e8b"],
+Cell[38331, 1462, 109, 0, 42, "Text",ExpressionUUID->"22140883-92c2-40a4-8ad7-d4b2ecada2bd"],
+Cell[CellGroupData[{
+Cell[38465, 1466, 240, 6, 36, "Input",ExpressionUUID->"01431c68-d9e9-4757-ba51-c335ecce2557"],
+Cell[38708, 1474, 228, 5, 41, "Output",ExpressionUUID->"25e3d1bd-c7f4-4979-a8f0-e69e325b1bf1"]
+}, Open  ]],
+Cell[38951, 1482, 155, 2, 42, "Text",ExpressionUUID->"c9d793e5-31a7-4d7b-80ef-f8a84ff3c81b"],
+Cell[CellGroupData[{
+Cell[39131, 1488, 144, 3, 36, "Input",ExpressionUUID->"a17e7a32-561b-4f0c-980c-81dc562cad9b"],
+Cell[39278, 1493, 476, 9, 72, "Output",ExpressionUUID->"b222facd-b1a5-4f15-9b83-0063c6251d1a"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[39791, 1507, 144, 3, 36, "Input",ExpressionUUID->"65619bfb-5dd1-498e-9def-42bfd142511f"],
+Cell[39938, 1512, 645, 14, 72, "Output",ExpressionUUID->"1389ed0b-c311-4d2e-8cba-2b60a8d7084f"]
+}, Open  ]],
+Cell[40598, 1529, 184, 3, 42, "Text",ExpressionUUID->"392ef620-39c9-4829-b9fd-6b98379f945e"],
+Cell[CellGroupData[{
+Cell[40807, 1536, 109, 1, 36, "Input",ExpressionUUID->"37c9425b-a148-4878-8f71-2a2fa837bf49"],
+Cell[40919, 1539, 397, 10, 52, "Print",ExpressionUUID->"f01e43ba-6908-42d9-9832-1466b8c16e30",
+ CellTags->"Info3283058100-5902494"]
+}, Open  ]],
+Cell[41331, 1552, 131, 0, 42, "Text",ExpressionUUID->"9bf13f9d-9d29-4879-ba33-ad505c1f9f58"],
+Cell[CellGroupData[{
+Cell[41487, 1556, 316, 8, 36, "Input",ExpressionUUID->"2bb715c3-7d0a-402b-b489-43404d490ebe"],
+Cell[41806, 1566, 992, 25, 100, "Output",ExpressionUUID->"b135aa58-5683-4b3f-9362-33e9d65a06c6"]
+}, Open  ]],
+Cell[42813, 1594, 160, 3, 42, "Text",ExpressionUUID->"e40385d1-db50-4403-81b7-49e077122b62"],
+Cell[CellGroupData[{
+Cell[42998, 1601, 429, 12, 36, "Input",ExpressionUUID->"8999843c-f245-4865-8bfc-022d829c5571"],
+Cell[43430, 1615, 987, 25, 100, "Output",ExpressionUUID->"7baa1eb2-3f44-438e-8b17-6654411d66c6"]
+}, Open  ]],
+Cell[44432, 1643, 218, 3, 69, "Text",ExpressionUUID->"2021a99a-9f00-49b9-b939-1e80596b13f1"],
+Cell[CellGroupData[{
+Cell[44675, 1650, 637, 16, 87, "Input",ExpressionUUID->"e149b50f-1e8b-476b-803d-4d83d18965d2"],
+Cell[45315, 1668, 16943, 731, 232, 15246, 701, "GraphicsData", "PostScript", "Graphics",ExpressionUUID->"b8df4a31-18c0-4db0-81cc-6ce6ee35c520"],
+Cell[62261, 2401, 191, 5, 41, "Output",ExpressionUUID->"65836c7c-6476-43a8-9e7a-5750d45af453"]
+}, Open  ]],
+Cell[62467, 2409, 143, 2, 42, "Text",ExpressionUUID->"e2abedd0-ae22-4f77-b8c1-daf669551547"],
+Cell[CellGroupData[{
+Cell[62635, 2415, 562, 18, 36, "Input",ExpressionUUID->"08c43a55-3f8a-44d6-aa34-25ff2f66a3a6"],
+Cell[63200, 2435, 4823, 254, 232, 3069, 223, "GraphicsData", "PostScript", "Graphics",ExpressionUUID->"438934a3-d6d8-4710-8060-9aff8a99f399"],
+Cell[68026, 2691, 191, 5, 41, "Output",ExpressionUUID->"c02fed3b-3e76-4a46-b94e-f39714bf58dd"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[68254, 2701, 619, 20, 36, "Input",ExpressionUUID->"34996e3c-128f-4b2f-af0e-84c77819c4a0"],
+Cell[68876, 2723, 6061, 328, 232, 3992, 292, "GraphicsData", "PostScript", "Graphics",ExpressionUUID->"5bbb5872-70cf-441b-8fbc-b3964885f356"],
+Cell[74940, 3053, 191, 5, 41, "Output",ExpressionUUID->"3ca60e1e-4d82-4129-b05c-64d72a66a92f"]
+}, Open  ]],
+Cell[75146, 3061, 124, 0, 42, "Text",ExpressionUUID->"4b141096-0baf-4b90-8556-3d0fcf4bdc0a"],
+Cell[CellGroupData[{
+Cell[75295, 3065, 1004, 33, 62, "Input",ExpressionUUID->"6e854277-27d8-4886-b606-f898ff1066b8"],
+Cell[76302, 3100, 5573, 293, 232, 3480, 257, "GraphicsData", "PostScript", "Graphics",ExpressionUUID->"35231a61-ec32-4337-8c6b-e4c33f39b40e"],
+Cell[81878, 3395, 191, 5, 41, "Output",ExpressionUUID->"7cbf98b4-f118-46b2-835f-06643412aceb"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
