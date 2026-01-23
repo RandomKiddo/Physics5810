@@ -1,0 +1,1000 @@
+%!PS-Adobe-3.0
+%%Title: integ_test.cpp, integ_routines.cpp
+%%For: furnstah
+%%Creator: a2ps version 4.14
+%%CreationDate: Sun Jan  9 16:18:16 2011
+%%BoundingBox: 24 24 588 768
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 2
+%%PageOrder: Ascend
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      % <vector> <key> <val>
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def % -
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Get the underline position and thickness if they're defined.
+    % Use 1 if they are not defined.
+    currentdict /FontInfo 2 copy known
+    { get
+      /UnderlinePosition 2 copy % <FontInfo> /UP <FontInfo> /UP
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+
+      /UnderlineThickness 2 copy % <FontInfo> /UT <FontInfo> /UT
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+      pop % -
+    }{ pop pop
+    } ifelse
+
+    currentdict
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 612 def
+/sw 792 def
+/llx 24 def
+/urx 768 def
+/ury 588 def
+/lly 24 def
+/#copies 1 def
+/th 15.000000 def
+/fnfs 11 def
+/bfs 7.493857 def
+/cw 4.496314 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   522.321860 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(//  file: integ_test.cpp) c n
+(//) N
+(//  This is a test program for basic integration methods.               ) N
+(//                                                                     ) N
+(//  Programmer:  Dick Furnstahl  furnstahl.1@osu.edu) N
+(//) N
+(//  Revision history:) N
+(//      04-Jan-2004  original version, for 780.20 Computational Physics) N
+(//      08-Jan-2005  changed functions to pass integrand) N
+(//      09-Jan-2011  updated functions) N
+(//) N
+(//  Notes:) N
+(//   * define with floats to emphasize round-off error  ) N
+(//   * compile with:  "g++ -Wall -c integ_test.cpp") N
+(//   * adapted from: "Projects in Computational Physics" by Landau and Paez  ) N
+(//             copyrighted by John Wiley and Sons, New York               ) N
+(//             code copyrighted by RH Landau                           ) N
+(// ) N
+(//************************************************************************) N
+() p n
+(// include files) c n
+(#include) K
+( <iostream>) p n
+(#include) K
+( <iomanip>) p n
+(#include) K
+( <fstream>) p n
+(#include) K
+( <cmath>) p n
+(using) K
+( ) p
+(namespace) K
+( std;) p n
+() N
+(#include) K
+( ") p
+(integ_routines.h) str
+(") p 32 T () S
+(// prototypes for integration routines) c n
+() p n
+(float) k
+( my_integrand \() p
+(float) k
+( x\);) p n
+() N
+(const) K
+( ) p
+(double) k
+( ME = 2.7182818284590452354E0;) p 48 T () S
+(// Euler's number ) c n
+() p n
+(//************************************************************************) c n
+() p n
+(int) k n
+(main \(\)) p n
+({) N
+(  ) S
+(// set up the integration specifiction) c n
+(  ) p
+(const) K
+( ) p
+(int) k
+( max_intervals = 501;) p 40 T () S
+(// maximum number of intervals) c n
+(  ) p
+(const) K
+( ) p
+(float) k
+( lower = 0.0;) p 32 T () S
+(// lower limit of integration) c n
+(  ) p
+(const) K
+( ) p
+(float) k
+( upper = 1.0;) p 32 T () S
+(// upper limit of integration) c n
+() p n
+(  ) S
+(const) K
+( ) p
+(double) k
+( answer = 1. - 1. / ME;) p 40 T () S
+(// the "exact" answer for the test ) c n
+(  ) p
+(float) k
+( result = 0.;  ) p
+(// approximate answer) c n
+() p n
+(  ) S
+(// open the output file stream) c n
+(  ofstream integ_out \(") p
+(integ.dat) str
+("\);) p 40 T () S
+(// save data in integ.dat) c n
+(  integ_out << ") p
+(#  N   trapezoid     Simpsons      Gauss  ) str
+(" << endl;) p n
+(  integ_out << ") S
+(#-----------------------------------------) str
+(" << endl;) p n
+() N
+(  ) S
+(// Simpson's rule requires an odd number of intervals  ) c n
+(  ) p
+(for) K
+( \() p
+(int) k
+( i = 3; i <= max_intervals; i += 2\)) p n
+(  {) N
+(    integ_out << setw\(4\) << i;) N
+() N
+(    result = trapezoid_rule \(i, lower, upper, &my_integrand\);) N
+(    integ_out << ") S
+(  ) str
+(" << scientific << fabs \(result - answer\);) p n
+() N
+(    result = simpsons_rule \(i, lower, upper, &my_integrand\);) N
+(    integ_out << ") S
+(  ) str
+(" << scientific << fabs \(result - answer\);) p n
+() N
+(    result = gauss_quadrature \(i, lower, upper, &my_integrand\);) N
+(    integ_out << ") S
+(  ) str
+(" << scientific << fabs \(result - answer\);) p n
+() N
+(    integ_out << endl;) N
+(  }) N
+() N
+(  cout << ") S
+(data stored in integ.dat\\n) str
+(";) p n
+(integ_test.cpp) (Page 1/2) (Jan 09, 11 16:15) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(  integ_out.close \(\);) p n
+() N
+(  ) S
+(return) K
+( \(0\);) p n
+(}) N
+() N
+(//************************************************************************) c n
+() p n
+(// the function we want to integrate ) c n
+(float) k n
+(my_integrand \() p
+(float) k
+( x\)) p n
+({) N
+(  ) S
+(return) K
+( \(exp \(-x\)\);) p n
+(}) N
+(integ_test.cpp) (Page 2/2) (Jan 09, 11 16:15) title
+border
+grestore
+(Printed by furnstah) rhead
+(integ_test.cpp) (1/2) (Sunday January 09, 2011) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1-2) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(//  file: integ_routines.cpp) c n
+(//) N
+(//  These are routines for trapezoid, Simpson and Gauss rules               ) N
+(//                                                                     ) N
+(//  Programmer:  Dick Furnstahl  furnstahl.1@osu.edu) N
+(//) N
+(//  Revision history:) N
+(//      04-Jan-2004  original version, for 780.20 Computational Physics) N
+(//      08-Jan-2005  function to be integrated now passed, changed names) N
+(//      09-Jan-2011  new names and rearranged; fixed old bug) N
+(//) N
+(//  Notes:) N
+(//   * define with floats to emphasize round-off error  ) N
+(//   * compile with:  "g++ -Wall -c integ_routines.cpp" or makefile) N
+(//   * adapted from: "Projects in Computational Physics" by Landau and Paez) N
+(//             copyrighted by John Wiley and Sons, New York               ) N
+(//             code copyrighted by RH Landau  ) N
+(//   * equation for interval h = \(b-a\)/\(N-1\) with x_min=a and x_max=b) N
+(// ) N
+(//************************************************************************) N
+() p n
+(// include files) c n
+(#include) K
+( <cmath>) p n
+(#include) K
+( ") p
+(integ_routines.h) str
+("   ) p
+(// integration routine prototypes ) c n
+() p n
+(//************************************************************************) c n
+() p n
+(// Integration using trapezoid rule ) c n
+(float) k
+( trapezoid_rule \( ) p
+(int) k
+( num_pts, ) p
+(float) k
+( x_min, ) p
+(float) k
+( x_max, ) p n
+(                       ) S
+(float) k
+( \(*integrand\) \() p
+(float) k
+( x\) \)) p n
+({) N
+(   ) S
+(float) k
+( interval = \(\(x_max - x_min\)/) p
+(float) k
+(\(num_pts - 1\)\);  ) p
+(// called h in notes) c n
+(   ) p
+(float) k
+( sum=  0.;  ) p
+(// initialize integration sum to zero) c 64 T () S 72 T ( ) N
+() p n
+(   ) S
+(for) K
+( \() p
+(int) k
+( n=2; n<num_pts; n++\)          ) p
+(// sum the midpoint contributions ) c n
+(   {) p n
+(     ) S
+(float) k
+( x = x_min + interval * ) p
+(float) k
+(\(n-1\);      ) p n
+(     sum += interval * integrand\(x\);) N
+(   }) N
+(   ) S
+(// add in the endpoint contributions ) c n
+(   sum +=  \(interval/2.\) * \(integrand\(x_min\) + integrand\(x_max\)\);) p 72 T () N
+( ) N
+(   ) S
+(return) K
+( \(sum\);) p n
+(}      ) N
+() N
+(//************************************************************************) c n
+() p n
+(// Integration using Simpson's rule) c n
+(float) k
+( simpsons_rule \( ) p
+(int) k
+( num_pts, ) p
+(float) k
+( x_min, ) p
+(float) k
+( x_max, ) p n
+(                      ) S
+(float) k
+( \(*integrand\) \() p
+(float) k
+( x\) \)) p n
+({  ) N
+(   ) S
+(float) k
+( interval = \(\(x_max - x_min\)/) p
+(float) k
+(\(num_pts - 1\)\);  ) p
+(// called h in notes) c n
+(   ) p
+(float) k
+( sum=  0.;  ) p
+(// initialize integration sum to zero) c 64 T () S 72 T ( ) N
+(   ) p n
+(   ) S
+(for) K
+( \() p
+(int) k
+( n=2; n<num_pts; n+=2\)                ) p
+(// loop for odd points  ) c n
+(   {) p n
+(     ) S
+(float) k
+( x = x_min + interval * ) p
+(float) k
+(\(n-1\);) p n
+(     sum += \(4./3.\)*interval * integrand\(x\);) N
+(   }) N
+(   ) S
+(for) K
+( \() p
+(int) k
+( n=3; n<num_pts; n+=2\)                ) p
+(// loop for even points  ) c n
+(   {) p n
+(     ) S
+(float) k
+( x = x_min + interval * ) p
+(float) k
+(\(n-1\);) p n
+(     sum += \(2./3.\)*interval * integrand\(x\);) N
+(   }   ) N
+(   ) S
+(// add in the endpoint contributions   ) c n
+(   sum +=  \(interval/3.\) * \(integrand\(x_min\) + integrand\(x_max\)\);) p 72 T () N
+(   ) N
+(   ) S
+(return) K
+( \(sum\);) p n
+(}  ) N
+(integ_routines.cpp) (Page 1/2) (Jan 09, 11 16:14) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(//************************************************************************) c n
+() p n
+(// Integration using Gauss quadrature rule  ) c n
+(float) k
+( gauss_quadrature \( ) p
+(int) k
+( num_pts, ) p
+(float) k
+( x_min, ) p
+(float) k
+( x_max, ) p n
+(                         ) S
+(float) k
+( \(*integrand\) \() p
+(float) k
+( x\) \)) p n
+({) N
+(   ) S
+(float) k
+( quadra = 0.;) p n
+(   ) S
+(double) k
+( weight[1000], x[1000];             ) p
+(// for points and weights ) c n
+(   ) p n
+(   gauss \(num_pts, 0, x_min, x_max, x, weight\);     ) S
+(// returns Legendre ) c n
+(                                                    ) p
+(//  points and weights ) c n
+(   ) p
+(for) K
+( \() p
+(int) k
+( n=0; n< num_pts; n++\)) p n
+(   {                               ) N
+(      quadra += integrand\(x[n]\)*weight[n];      ) S
+(// calculating the integral ) c n
+(   }   ) p n
+(   ) S
+(return) K
+( \(quadra\);                  ) p n
+(}) N
+(integ_routines.cpp) (Page 2/2) (Jan 09, 11 16:14) title
+border
+grestore
+(Printed by furnstah) rhead
+(integ_routines.cpp) (2/2) (Sunday January 09, 2011) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF
