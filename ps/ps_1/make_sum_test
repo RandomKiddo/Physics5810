@@ -1,0 +1,67 @@
+# Shell
+SHELL=/bin/sh 
+
+# The base name of the makefile
+BASE = sum_test
+
+# The SRCS
+SRCS = sum_test.cpp
+
+# We have no HDRS or INPFILE
+
+# Generate names for obejct files
+OBJS= $(addsuffix .o, $(basename $(SRCS)))
+MAKEFILE= make_$(BASE)
+COMMAND=  $(BASE).x
+TARFILE= $(BASE).tar.gz
+ZIPFILE= $(BASE).zip
+
+# Compiling 
+CXX = g++
+CFLAGS =  -g -O2
+CWARNS = -Wall 
+
+# No relevant libraries
+
+# Instructions for compiling
+all:    $(COMMAND) 
+
+.SUFFIXES:
+.SUFFIXES: .o .mod .f90 .f .cpp
+
+#%.o:   %.mod 
+
+# This is the command to link all of the object files together. 
+#  For fortran, replace CXX by F90.
+$(COMMAND): $(OBJS) $(MAKEFILE) 
+	$(CXX) -o $(COMMAND) $(OBJS) $(LDFLAGS) $(LIBS)
+
+# Command to make object (.o) files from C++ source files (assumed to be .cpp).
+#  Add $(MOREFLAGS) if you want additional warning options.
+.cpp.o: $(HDRS) $(MAKEFILE)
+	$(CXX) -c $(CFLAGS) $(CWARNS) -o $@ $<
+
+# Commands to make object (.o) files from Fortran-90 (or beyond) and
+#  Fortran-77 source files (.f90 and .f, respectively).
+.f90.mod:
+	$(F90) -c $(F90FLAGS) -o $@ $< 
+ 
+.f90.o: 
+	$(F90) -c $(F90FLAGS) -o $@ $<
+ 
+.f.o:   
+	$(F90) -c $(FFLAGS) -o $@ $<
+
+# Additional tasks
+# Delete the program and the object files (and any module files)
+clean:
+	/bin/rm -f $(COMMAND) $(OBJS)
+	/bin/rm -f $(MODIR)/*.mod
+ 
+# Pack up the code in a compressed gnu tar file 
+tarz:
+	tar cfvz $(TARFILE) $(MAKEFILE) $(SRCS) $(HDRS) $(MODIR) $(INPFILE) 
+
+# Pack up the code in a zip archive
+zip:
+	zip -r $(ZIPFILE) $(MAKEFILE) $(SRCS) $(HDRS) $(MODIR) $(INPFILE) 
