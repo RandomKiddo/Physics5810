@@ -44,6 +44,9 @@ ___
 
 There will be session PDFs you can follow in the folders. The rest is all code output dumps, including C++ files, Python files, Jupyter notebooks, Mathematica notebooks, Makefiles, .dat files, and more.
 
+> [!NOTE]
+> This is a *file dump*. There will be redundant, useless, and not required files, like executables or PDF files. Look at whatever you need.
+
 ___
 
-<sub>This page was last edited on 01.23.2026</sub>
+<sub>This page was last edited on 02.06.2026</sub>
