@@ -1,0 +1,25 @@
+<OscillatorParameters>
+  <Particle>
+    <Mass>10.</Mass>
+    <PotentialPrefactor>39.478</PotentialPrefactor>
+    <PotentialPower>2.</PotentialPower>
+  </Particle>
+  <Driving>
+    <Strength>0.</Strength>
+    <Frequency>1.</Frequency>
+    <Phase>0.</Phase>
+  </Driving>
+  <InitialConditions>
+    <Position>0.</Position>
+    <Velocity>1.</Velocity>
+  </InitialConditions>
+  <Integration>
+    <InitialTime>0.</InitialTime>
+    <FinalTime>15.</FinalTime>
+    <MeshSpacing>0.001</MeshSpacing>
+    <PlotSkip>10</PlotSkip>
+  </Integration>
+  <Output>
+    <Append>1</Append>
+  </Output>
+</OscillatorParameters>
