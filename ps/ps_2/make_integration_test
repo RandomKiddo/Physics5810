@@ -1,0 +1,47 @@
+# Define the shell and the current OS
+SHELL = /bin/sh
+UNAME_S := $(shell uname -s)
+
+# Define the base and use G++
+CXX = g++
+BASE = integration_test
+
+# This is for configuration of GSL
+# The first part configures for my system (Mac OSX with Homebrew)
+# The else statement uses standard Linux defaults
+ifeq ($(UNAME_S), Darwin)
+    # macOS: Use pkg-config
+    GSL_CFLAGS := $(shell pkg-config --cflags gsl)
+    GSL_LIBS   := $(shell pkg-config --libs gsl)
+else
+    GSL_CFLAGS := -I/usr/local/include
+    GSL_LIBS   := -L/usr/local/lib -lgsl -lgslcblas -lm
+endif
+
+# We add the compiler and linker flags
+CXXFLAGS = -std=c++17 -g -O3 -Wall -Wextra $(GSL_CFLAGS)
+LDFLAGS  = $(GSL_LIBS)
+
+# Define the SRCS and headers
+SRCS = integration_test.cpp integration.cpp
+HDRS = integration.h
+OBJS = $(SRCS:.cpp=.o)
+COMMAND = $(BASE).x
+
+# Below defines the make routines, like all and clean. 
+
+.PHONY: all clean zip
+
+all: $(COMMAND)
+
+$(COMMAND): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+
+%.o: %.cpp $(HDRS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(COMMAND) $(OBJS)
+
+zip:
+	zip -r $(BASE).zip Makefile $(SRCS) $(HDRS)
