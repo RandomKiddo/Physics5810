@@ -1,0 +1,99 @@
+# Sample .bashrc file
+#  last revised: 12-Feb-2005
+#  
+
+# User specific aliases and functions
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+#-------------------
+# Personal Aliases
+#-------------------
+
+# redefine commands to make them safer
+alias rm='rm -i'        # ask before deleting
+alias cp='cp -i'        # ask before copying over an existing file
+alias mv='mv -i'        # ask before renaming to an existing file
+alias mkdir='mkdir -p'  # no error if the directory already exists
+
+# force things
+alias rmf='rm -f'     # delete without prompting (careful!)
+alias rmrf='rm -rf'   # delete recursively without prompting (careful)
+
+alias h='history'  # shortcut for history
+alias j='jobs -l'  # list process IDs as well
+alias du='du -kh'  # hard disk usage in readable format
+alias df='df -kTh' # filesystem disk space usage in readable format
+
+# The 'ls' family (this assumes you use the GNU ls)
+alias ll='ls -al'               # full directory listing
+alias la='ls -Al'               # show hidden files
+alias ls='ls -hF --color'	# add colors for filetype recognition
+alias lx='ls -lXB'              # sort by extension
+alias lk='ls -lSr'              # sort by size
+alias lc='ls -lcr'		# sort by change time  
+alias lu='ls -lur'		# sort by access time   
+alias lr='ls -lR'               # recursive ls
+alias lt='ls -ltr'              # sort by date
+alias lm='ls -al |more'         # pipe through 'more'
+
+# processes
+alias psf='ps -aux'    # detail info on all processes
+
+# other names
+alias del='rm'    # delete
+alias dir='ls'    # list directory
+alias dirf='ll'   # full directory listing
+alias copy='cp'   
+alias rename='mv'  
+
+# directory movement
+alias up='cd ..'
+alias down='cd'
+alias home='cd $HOME'
+
+# permissions (just two sets of names!)
+alias lock='chmod og-rwx'  # remove permissions from group and others
+alias unlock='chmod og+r'  # allow group and others to read
+alias hide="chmod go-rwx"  # turn off file permissions 
+alias unhide="chmod go+r"  # let file be readable
+
+# so we're not tempted to use insecure rsh
+alias rsh='ssh'  # ALWAYS use ssh
+
+# rsync stuff
+alias rsyncbackup='rsync --verbose --progress --stats --rsh=ssh --compress --archive --update'
+alias rsyncmirror='rsync --verbose --progress --stats --rsh=ssh --compress --archive --update --delete'
+
+#-----------------------------------
+# Various functions:
+#-----------------------------------
+
+# list specified process; e.g., psgrep mozilla
+psgrep () {         
+   ps -aux | grep $1 | grep -v grep
+}
+
+# checks disk usage and sorts with biggest first 
+du-s () {  
+  /usr/bin/du -s * | sort -nr 
+}
+	
+# look in history; e.g., H make --> finds all commands with "make"
+H () {  
+  history | fgrep $1
+}
+
+# Find a file with a pattern in name (case insensitive)
+function findf() { 
+  find . -type f -iname '*'$*'*' -ls ; 
+}
+
+# Find a file with pattern $1 in name and Execute $2 on it:
+function finde() { 
+  find . -type f -iname '*'$1'*' -exec "${2:-file}" {} \;  ; 
+}
+

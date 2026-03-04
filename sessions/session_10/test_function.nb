@@ -1,0 +1,133 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[      3585,        124]
+NotebookOptionsPosition[      2726,         97]
+NotebookOutlinePosition[      3419,        119]
+CellTagsIndexPosition[      3376,        116]
+WindowFrame->Normal
+ContainsDynamic->False*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"f", "[", "x_", "]"}], " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"Exp", "[", 
+    RowBox[{"-", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"x", "-", "1"}], ")"}], "^", "2"}]}], "]"}], "*", 
+   RowBox[{"Sin", "[", 
+    RowBox[{"8", "x"}], "]"}]}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"D", "[", 
+  RowBox[{
+   RowBox[{"f", "[", "x", "]"}], ",", "x"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Factor", "[", "%", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Plot", "[", 
+  RowBox[{
+   RowBox[{"f", "[", "x", "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "0", ",", "5"}], "}"}], ",", 
+   RowBox[{"PlotRange", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "1"}], ",", "1"}], "}"}]}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Plot", "[", 
+  RowBox[{
+   RowBox[{"f", "[", "x", "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "15", ",", "16"}], "}"}], ",", 
+   RowBox[{"PlotRange", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"-", "2"}], " ", 
+       RowBox[{"10", "^", 
+        RowBox[{"(", 
+         RowBox[{"-", "90"}], ")"}]}]}], ",", 
+      RowBox[{"2", " ", 
+       RowBox[{"10", "^", 
+        RowBox[{"(", 
+         RowBox[{"-", "90"}], ")"}]}]}]}], "}"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.445592436308848*^9, 3.4455924576521883`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"FindMinimum", "[", 
+  RowBox[{
+   RowBox[{"f", "[", "x", "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "15.2", ",", "15.6"}], "}"}], ",", 
+   RowBox[{"WorkingPrecision", "\[Rule]", "40"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.4455924999795003`*^9, 3.4455925140417304`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"FindMinimum", "[", 
+  RowBox[{
+   RowBox[{"f", "[", "x", "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "1.2", ",", "1.6"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.4455924771674385`*^9, 3.4455924790424023`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"FindMinimum", "[", 
+  RowBox[{
+   RowBox[{"f", "[", "x", "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "0.3", ",", "0.7"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.44559248621414*^9, 3.4455924890109615`*^9}}]
+},
+WindowSize->{693, 725},
+WindowMargins->{{33, Automatic}, {Automatic, 25}},
+PrintingPageRange->{Automatic, Automatic},
+PrintingOptions->{"Magnification"->1,
+"PaperOrientation"->"Portrait",
+"PaperSize"->{612, 792},
+"PostScriptOutputFile":>FrontEnd`FileName[{$RootDirectory, "home", "furnstah",
+    "Teaching", "Computational_Physics", "class", "2005", "session_14"}, 
+  "test_function.nb.ps", CharacterEncoding -> "iso8859-1"]},
+FrontEndVersion->"6.0 for Microsoft Windows (32-bit) (June 19, 2007)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[568, 21, 295, 10, 31, "Input"],
+Cell[866, 33, 106, 3, 31, "Input"],
+Cell[975, 38, 59, 1, 31, "Input"],
+Cell[1037, 41, 289, 9, 31, "Input"],
+Cell[1329, 52, 582, 18, 31, "Input"],
+Cell[1914, 72, 307, 7, 31, "Input"],
+Cell[2224, 81, 249, 6, 31, "Input"],
+Cell[2476, 89, 246, 6, 31, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)
