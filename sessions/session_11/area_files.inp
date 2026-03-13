@@ -1,0 +1,20 @@
+# This is an input file for the area_files.cpp program
+#  After five lines with #'s, any number of radii are given
+#  one to a line, with any alignment and formatting.
+#
+#   radius  integer
+1.0   3
+1.1 3
+1.2  1
+1.3         10
+  1.4  0
+  1.5 9
+  1.6  2
+  1.7  1
+ 1.8  -1
+1.9  4
+2.0  4
+1.0 7
+0.75 1
+ 0.5  1
+ 0.25  8
